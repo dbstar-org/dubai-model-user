@@ -41,4 +41,16 @@
       <artifactId>dubai-model-service</artifactId>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>site-local</id>
+      <distributionManagement>
+        <site>
+          <id>local</id>
+          <url>${project.site.root.project}</url>
+        </site>
+      </distributionManagement>
+    </profile>
+  </profiles>
 </project>
