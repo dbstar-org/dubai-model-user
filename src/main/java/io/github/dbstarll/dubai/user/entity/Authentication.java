@@ -12,9 +12,9 @@ import java.util.Map;
 public interface Authentication extends UserEntities, Notifiable, CredentialBase, PrincipalBase {
     SourceType getSource();
 
-  void setSource(SourceType source);
+    void setSource(SourceType source);
 
-  Map<String, Map<String, Object>> getDetails();
+    Map<String, Map<String, Object>> getDetails();
 
-  void setDetails(Map<String, Map<String, Object>> details);
+    void setDetails(Map<String, Map<String, Object>> details);
 }

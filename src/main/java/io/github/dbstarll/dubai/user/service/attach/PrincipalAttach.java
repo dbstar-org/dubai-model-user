@@ -16,14 +16,14 @@ import java.util.Map.Entry;
 
 @Implementation(PrincipalAttachImplemental.class)
 public interface PrincipalAttach<E extends Entity & PrincipalBase> extends CoreAttachs {
-  Bson filterByPrincipalId(ObjectId principalId);
+    Bson filterByPrincipalId(ObjectId principalId);
 
-  long countByPrincipalId(ObjectId principalId);
+    long countByPrincipalId(ObjectId principalId);
 
-  FindIterable<E> findByPrincipalId(ObjectId principalId);
+    FindIterable<E> findByPrincipalId(ObjectId principalId);
 
-  DeleteResult deleteByPrincipalId(ObjectId principalId);
+    DeleteResult deleteByPrincipalId(ObjectId principalId);
 
-  <P extends Entity, SPT extends Service<P>> MongoIterable<Entry<E, P>> findWithPrincipal(SPT principalService,
-                                                                                          Bson filter);
+    <P extends Entity, SPT extends Service<P>> MongoIterable<Entry<E, P>> findWithPrincipal(SPT principalService,
+                                                                                            Bson filter);
 }

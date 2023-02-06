@@ -12,13 +12,13 @@ import java.util.Map;
 public interface Credential extends UserEntities, Defunctable, Cacheable, PrincipalBase {
     SourceType getSource();
 
-  void setSource(SourceType source);
+    void setSource(SourceType source);
 
-  Map<String, Object> getCredentials();
+    Map<String, Object> getCredentials();
 
-  void setCredentials(Map<String, Object> credentials);
+    void setCredentials(Map<String, Object> credentials);
 
-  boolean isDisabled();
+    boolean isDisabled();
 
-  void setDisabled(boolean disabled);
+    void setDisabled(boolean disabled);
 }

@@ -17,9 +17,9 @@ import java.util.Map.Entry;
 public interface CredentialAttach<E extends Entity & CredentialBase> extends CoreAttachs {
     Bson filterByCredentialId(ObjectId credentialId);
 
-  long countByCredentialId(ObjectId credentialId);
+    long countByCredentialId(ObjectId credentialId);
 
-  FindIterable<E> findByCredentialId(ObjectId credentialId);
+    FindIterable<E> findByCredentialId(ObjectId credentialId);
 
-  MongoIterable<Entry<E, Credential>> findWithCredential(Bson filter);
+    MongoIterable<Entry<E, Credential>> findWithCredential(Bson filter);
 }
