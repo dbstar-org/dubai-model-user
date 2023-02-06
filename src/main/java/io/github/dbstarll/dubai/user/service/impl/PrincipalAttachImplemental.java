@@ -54,7 +54,7 @@ public final class PrincipalAttachImplemental<E extends Entity & PrincipalBase, 
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     super.afterPropertiesSet();
     notNull(registry, "registry is null");
     notNull(entityCodec, "entityCodec is null");

@@ -57,7 +57,7 @@ public final class CredentialAttachImplemental<E extends Entity & CredentialBase
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     super.afterPropertiesSet();
     notNull(entityCodec, "entityCodec is null");
     notNull(credentialCodec, "credentialCodec is null");

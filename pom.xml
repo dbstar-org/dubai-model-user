@@ -4,13 +4,13 @@
   <parent>
     <groupId>io.github.dbstarll.dubai</groupId>
     <artifactId>dubai-module</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
   </parent>
   <artifactId>dubai-module-user</artifactId>
   <version>1.0.3-SNAPSHOT</version>
 
   <description>dubai user module</description>
-  <url>https://github.com/dbstarll/dubai-module-user</url>
+  <url>https://github.com/dbstar-org/dubai-module-user</url>
 
   <scm>
     <connection>scm:git:${project.git.git.root}</connection>
