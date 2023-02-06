@@ -94,9 +94,9 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
     }
 
     private PasswordHistory parsePasswordHistory(Object history) {
-        if (PasswordHistory.class.isInstance(history)) {
+        if (history instanceof PasswordHistory) {
             return (PasswordHistory) history;
-        } else if (Document.class.isInstance(history)) {
+        } else if (history instanceof Document) {
             final Document doc = (Document) history;
             return new PasswordHistory(doc.getString(FIELD_PASSWORD), doc.getDate(FIELD_DATE));
         } else {

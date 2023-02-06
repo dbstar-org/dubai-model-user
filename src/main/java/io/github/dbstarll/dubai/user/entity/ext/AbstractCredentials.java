@@ -95,9 +95,9 @@ abstract class AbstractCredentials implements CredentialDetails, Cloneable, Seri
         if (obj == null) {
             return false;
         }
-        if (AbstractCredentials.class.isInstance(obj)) {
+        if (obj instanceof AbstractCredentials) {
             return map.equals(((AbstractCredentials) obj).map);
-        } else if (Map.class.isInstance(obj)) {
+        } else if (obj instanceof Map) {
             return map.equals(obj);
         } else {
             return false;

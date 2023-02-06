@@ -59,7 +59,7 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
             public void validate(Credential entity, Credential original, Validate validate) {
                 if (entity.getCredentials() == null || entity.getCredentials().isEmpty()) {
                     validate.addFieldError(CredentialDetails.FIELD_CREDENTIALS, "凭据未设置");
-                } else if (CredentialDetails.class.isInstance(entity.getCredentials())) {
+                } else if (entity.getCredentials() instanceof CredentialDetails) {
                     ((CredentialDetails) entity.getCredentials()).validate(original == null ? null : original.getCredentials(),
                             validate);
                 }
@@ -85,7 +85,7 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
                         }
                     }
 
-                    if (CredentialDetails.class.isInstance(entity.getCredentials())) {
+                    if (entity.getCredentials() instanceof CredentialDetails) {
                         final List<Bson> filters = new ArrayList<>();
                         filters.add(((CredentialDetails) entity.getCredentials()).distinctFilter());
                         if (original != null) {
