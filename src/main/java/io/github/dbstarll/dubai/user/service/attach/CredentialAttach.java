@@ -15,7 +15,7 @@ import java.util.Map.Entry;
 
 @Implementation(CredentialAttachImplemental.class)
 public interface CredentialAttach<E extends Entity & CredentialBase> extends CoreAttachs {
-  Bson filterByCredentialId(ObjectId credentialId);
+    Bson filterByCredentialId(ObjectId credentialId);
 
   long countByCredentialId(ObjectId credentialId);
 

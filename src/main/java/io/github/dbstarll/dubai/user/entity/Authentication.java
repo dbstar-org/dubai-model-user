@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Table
 public interface Authentication extends UserEntities, Notifiable, CredentialBase, PrincipalBase {
-  SourceType getSource();
+    SourceType getSource();
 
   void setSource(SourceType source);
 

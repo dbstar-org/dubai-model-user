@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Table
 public interface Credential extends UserEntities, Defunctable, Cacheable, PrincipalBase {
-  SourceType getSource();
+    SourceType getSource();
 
   void setSource(SourceType source);
 
