@@ -1,117 +1,65 @@
 package io.github.dbstarll.dubai.user.entity.ext;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 abstract class AbstractCredentials implements CredentialDetails, Cloneable, Serializable {
     private static final long serialVersionUID = 7011651370922942849L;
 
-    private final Map<String, Object> map;
+    private final Map<String, Serializable> map;
 
     AbstractCredentials() {
         this(null);
     }
 
-    AbstractCredentials(Map<String, Object> map) {
-        this.map = map == null ? new HashMap<String, Object>() : new HashMap<>(map);
+    AbstractCredentials(final Map<String, Serializable> map) {
+        this.map = map == null ? new HashMap<>() : new HashMap<>(map);
     }
 
-    @Override
-    public final int size() {
-        return map.size();
-    }
-
-    @Override
-    public final boolean isEmpty() {
-        return map.isEmpty();
-    }
-
-    @Override
-    public final boolean containsKey(Object key) {
+    public final boolean containsKey(final Object key) {
         return map.containsKey(key);
     }
 
-    @Override
-    public final boolean containsValue(Object value) {
-        return map.containsValue(value);
-    }
-
-    @Override
-    public final Object get(Object key) {
+    public final Serializable get(final Object key) {
         return map.get(key);
     }
 
-    @Override
-    public final Object put(String key, Object value) {
+    public final Object put(final String key, final Serializable value) {
         return map.put(key, value);
     }
 
     @Override
-    public final Object remove(Object key) {
-        return map.remove(key);
-    }
-
-    @Override
-    public final void putAll(Map<? extends String, ? extends Object> m) {
-        map.putAll(m);
-    }
-
-    @Override
-    public final void clear() {
-        map.clear();
-    }
-
-    @Override
-    public final Set<String> keySet() {
-        return map.keySet();
-    }
-
-    @Override
-    public final Collection<Object> values() {
-        return map.values();
-    }
-
-    @Override
-    public final Set<Entry<String, Object>> entrySet() {
-        return map.entrySet();
+    public final boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        } else if (!(o instanceof AbstractCredentials)) {
+            return false;
+        }
+        final AbstractCredentials that = (AbstractCredentials) o;
+        return new EqualsBuilder()
+                .append(map, that.map)
+                .isEquals();
     }
 
     @Override
     public final int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + map.hashCode();
-        return result;
-    }
-
-    @Override
-    public final boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (obj instanceof AbstractCredentials) {
-            return map.equals(((AbstractCredentials) obj).map);
-        } else if (obj instanceof Map) {
-            return map.equals(obj);
-        } else {
-            return false;
-        }
+        return map.hashCode();
     }
 
     @Override
     public final AbstractCredentials clone() throws CloneNotSupportedException {
-        final AbstractCredentials details = (AbstractCredentials) super.clone();
-        return details;
+        return (AbstractCredentials) super.clone();
     }
 
     @Override
     public final String toString() {
         return getClass().getName() + ": " + map;
+    }
+
+    Map<String, Serializable> map() {
+        return this.map;
     }
 }

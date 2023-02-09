@@ -7,7 +7,7 @@ import io.github.dbstarll.dubai.user.service.UserServices;
 
 public abstract class UserImplementals<E extends UserEntities, S extends UserServices<E>>
         extends AbstractImplemental<E, S> {
-    public UserImplementals(S service, Collection<E> collection) {
+    protected UserImplementals(final S service, final Collection<E> collection) {
         super(service, collection);
     }
 }

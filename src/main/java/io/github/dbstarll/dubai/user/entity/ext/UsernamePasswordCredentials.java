@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,15 +25,15 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
     public static final String FIELD_HISTORIES = "histories";
     public static final int MAX_HISTORIES = 5;
 
-    UsernamePasswordCredentials(String username, String password, List<PasswordHistory> histories) {
+    UsernamePasswordCredentials(final String username, final String password, final List<PasswordHistory> histories) {
         setUsername(username);
         setPassword(password);
         if (histories != null) {
-            put(FIELD_HISTORIES, noNullElements(histories, "histories contains null element at index: %d"));
+            put(FIELD_HISTORIES, (Serializable) noNullElements(histories, "histories contains null element at index: %d"));
         }
     }
 
-    UsernamePasswordCredentials(Map<String, Object> map) {
+    UsernamePasswordCredentials(final Map<String, Serializable> map) {
         super(map);
     }
 
@@ -40,7 +41,7 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
         return (String) get(FIELD_USERNAME);
     }
 
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         put(FIELD_USERNAME, notBlank(username, FIELD_USERNAME + " is blank"));
     }
 
@@ -48,7 +49,7 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
         return (String) get(FIELD_PASSWORD);
     }
 
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         put(FIELD_PASSWORD, notBlank(password, FIELD_PASSWORD + " is blank"));
     }
 
@@ -60,7 +61,7 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
     public List<PasswordHistory> getHistories() {
         if (containsKey(FIELD_HISTORIES)) {
             final List<PasswordHistory> histories = new LinkedList<>();
-            for (Object history : (List<?>) get(FIELD_HISTORIES)) {
+            for (Serializable history : (List<Serializable>) get(FIELD_HISTORIES)) {
                 histories.add(parsePasswordHistory(history));
             }
             return histories;
@@ -69,7 +70,7 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
     }
 
     @Override
-    public void validate(Map<String, Object> original, Validate validate) {
+    public void validate(final Map<String, Serializable> original, final Validate validate) {
         if (StringUtils.isBlank(getUsername())) {
             validate.addFieldError(FIELD_CREDENTIALS, "用户名未设置");
         }
@@ -78,7 +79,7 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
         }
 
         if (!validate.hasErrors()) {
-            @SuppressWarnings("unchecked") List<Object> histories = (List<Object>) (original != null ? original : this)
+            @SuppressWarnings("unchecked") List<Serializable> histories = (List<Serializable>) (original != null ? original : this.map())
                     .get(FIELD_HISTORIES);
             if (histories == null) {
                 histories = new LinkedList<>();
@@ -89,11 +90,11 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
             while (histories.size() > MAX_HISTORIES) {
                 histories.remove(histories.size() - 1);
             }
-            put(FIELD_HISTORIES, histories);
+            put(FIELD_HISTORIES, (Serializable) histories);
         }
     }
 
-    private PasswordHistory parsePasswordHistory(Object history) {
+    private PasswordHistory parsePasswordHistory(final Serializable history) {
         if (history instanceof PasswordHistory) {
             return (PasswordHistory) history;
         } else if (history instanceof Document) {
@@ -109,7 +110,7 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
         return distinctFilter(getUsername());
     }
 
-    public static Bson distinctFilter(String username) {
+    public static Bson distinctFilter(final String username) {
         return Filters.and(Filters.eq("source", SourceType.UsernamePassword),
                 Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_USERNAME, username));
     }

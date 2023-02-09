@@ -63,7 +63,7 @@ public class PasswordProperties implements Serializable {
         return remember;
     }
 
-    public void setRemember(int remember) {
+    public void setRemember(final int remember) {
         this.remember = remember;
     }
 
@@ -71,7 +71,7 @@ public class PasswordProperties implements Serializable {
         return minLen;
     }
 
-    public void setMinLen(int minLen) {
+    public void setMinLen(final int minLen) {
         this.minLen = minLen;
     }
 
@@ -79,7 +79,7 @@ public class PasswordProperties implements Serializable {
         return maxLen;
     }
 
-    public void setMaxLen(int maxLen) {
+    public void setMaxLen(final int maxLen) {
         this.maxLen = maxLen;
     }
 
@@ -87,7 +87,7 @@ public class PasswordProperties implements Serializable {
         return upper;
     }
 
-    public void setUpper(int upper) {
+    public void setUpper(final int upper) {
         this.upper = upper;
     }
 
@@ -95,7 +95,7 @@ public class PasswordProperties implements Serializable {
         return lower;
     }
 
-    public void setLower(int lower) {
+    public void setLower(final int lower) {
         this.lower = lower;
     }
 
@@ -103,7 +103,7 @@ public class PasswordProperties implements Serializable {
         return digit;
     }
 
-    public void setDigit(int digit) {
+    public void setDigit(final int digit) {
         this.digit = digit;
     }
 
@@ -111,7 +111,7 @@ public class PasswordProperties implements Serializable {
         return special;
     }
 
-    public void setSpecial(int special) {
+    public void setSpecial(final int special) {
         this.special = special;
     }
 
@@ -119,7 +119,7 @@ public class PasswordProperties implements Serializable {
         return complexity;
     }
 
-    public void setComplexity(int complexity) {
+    public void setComplexity(final int complexity) {
         this.complexity = complexity;
     }
 
@@ -127,7 +127,7 @@ public class PasswordProperties implements Serializable {
         return minDays;
     }
 
-    public void setMinDays(int minDays) {
+    public void setMinDays(final int minDays) {
         this.minDays = minDays;
     }
 
@@ -135,7 +135,7 @@ public class PasswordProperties implements Serializable {
         return maxDays;
     }
 
-    public void setMaxDays(int maxDays) {
+    public void setMaxDays(final int maxDays) {
         this.maxDays = maxDays;
     }
 
@@ -143,7 +143,7 @@ public class PasswordProperties implements Serializable {
         return warnDays;
     }
 
-    public void setWarnDays(int warnDays) {
+    public void setWarnDays(final int warnDays) {
         this.warnDays = warnDays;
     }
 }

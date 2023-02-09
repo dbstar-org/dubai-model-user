@@ -1,10 +1,10 @@
 package io.github.dbstarll.dubai.user.service.impl;
 
-import com.mongodb.Function;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.result.DeleteResult;
 import io.github.dbstarll.dubai.model.collection.Collection;
 import io.github.dbstarll.dubai.model.collection.CollectionNameGenerator;
 import io.github.dbstarll.dubai.model.entity.Entity;
@@ -37,7 +37,13 @@ public final class CredentialAttachImplemental<E extends Entity & CredentialBase
     private Codec<Credential> credentialCodec;
     private CollectionNameGenerator collectionNameGenerator;
 
-    public CredentialAttachImplemental(S service, Collection<E> collection) {
+    /**
+     * 构造CredentialAttachImplemental.
+     *
+     * @param service    服务类
+     * @param collection 集合类
+     */
+    public CredentialAttachImplemental(final S service, final Collection<E> collection) {
         super(service, collection);
     }
 
@@ -46,13 +52,13 @@ public final class CredentialAttachImplemental<E extends Entity & CredentialBase
      *
      * @param mongoDatabase mongoDatabase
      */
-    public void setMongoDatabase(MongoDatabase mongoDatabase) {
+    public void setMongoDatabase(final MongoDatabase mongoDatabase) {
         final CodecRegistry registry = mongoDatabase.getCodecRegistry();
         this.entityCodec = registry.get(entityClass);
         this.credentialCodec = registry.get(Credential.class);
     }
 
-    public void setCollectionNameGenerator(CollectionNameGenerator collectionNameGenerator) {
+    public void setCollectionNameGenerator(final CollectionNameGenerator collectionNameGenerator) {
         this.collectionNameGenerator = collectionNameGenerator;
     }
 
@@ -65,41 +71,42 @@ public final class CredentialAttachImplemental<E extends Entity & CredentialBase
     }
 
     @Override
-    public Bson filterByCredentialId(ObjectId credentialId) {
+    public Bson filterByCredentialId(final ObjectId credentialId) {
         return eq(CredentialBase.FIELD_NAME_CREDENTIAL_ID, credentialId);
     }
 
     @Override
-    public long countByCredentialId(ObjectId credentialId) {
+    public long countByCredentialId(final ObjectId credentialId) {
         return service.count(filterByCredentialId(credentialId));
     }
 
     @Override
-    public FindIterable<E> findByCredentialId(ObjectId credentialId) {
+    public FindIterable<E> findByCredentialId(final ObjectId credentialId) {
         return service.find(filterByCredentialId(credentialId));
     }
 
     @Override
-    public MongoIterable<Entry<E, Credential>> findWithCredential(Bson filter) {
+    public DeleteResult deleteByCredentialId(final ObjectId credentialId) {
+        return getCollection().deleteMany(filterByCredentialId(credentialId));
+    }
+
+    @Override
+    public MongoIterable<Entry<E, Credential>> findWithCredential(final Bson filter) {
         final List<Bson> pipeline = new LinkedList<>();
-        final Bson defunctFilter = aggregateMatchFilter(filter);
-        if (defunctFilter != null) {
-            pipeline.add(Aggregates.match(defunctFilter));
+        final Bson matchFilter = aggregateMatchFilter(filter);
+        if (matchFilter != null) {
+            pipeline.add(Aggregates.match(matchFilter));
         }
         pipeline.add(Aggregates.lookup(collectionNameGenerator.generateCollectionName(Credential.class),
                 CredentialBase.FIELD_NAME_CREDENTIAL_ID, Entity.FIELD_NAME_ID, "_credentials"));
 
-        return getCollection().aggregate(pipeline, BsonDocument.class)
-                .map(new Function<BsonDocument, Entry<E, Credential>>() {
-                    @Override
-                    public Entry<E, Credential> apply(BsonDocument t) {
-                        final BsonArray credentials = t.getArray("_credentials");
-                        final E entity = entityCodec.decode(t.asBsonReader(), decoderContext);
-                        final Credential credential = credentials.size() > 0
-                                ? credentialCodec.decode(((BsonDocument) credentials.get(0)).asBsonReader(), decoderContext)
-                                : null;
-                        return EntryWrapper.wrap(entity, credential);
-                    }
-                });
+        return getCollection().aggregate(pipeline, BsonDocument.class).map(t -> {
+            final BsonArray credentials = t.getArray("_credentials");
+            final E entity = entityCodec.decode(t.asBsonReader(), decoderContext);
+            final Credential credential = credentials.size() > 0
+                    ? credentialCodec.decode(((BsonDocument) credentials.get(0)).asBsonReader(), decoderContext)
+                    : null;
+            return EntryWrapper.wrap(entity, credential);
+        });
     }
 }

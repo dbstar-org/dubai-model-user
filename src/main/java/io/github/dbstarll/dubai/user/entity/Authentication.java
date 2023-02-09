@@ -6,15 +6,36 @@ import io.github.dbstarll.dubai.user.entity.enums.SourceType;
 import io.github.dbstarll.dubai.user.entity.join.CredentialBase;
 import io.github.dbstarll.dubai.user.entity.join.PrincipalBase;
 
+import java.io.Serializable;
 import java.util.Map;
 
 @Table
 public interface Authentication extends UserEntities, Notifiable, CredentialBase, PrincipalBase {
+    /**
+     * 获得认证方式.
+     *
+     * @return 认证方式
+     */
     SourceType getSource();
 
+    /**
+     * 设置认证方式.
+     *
+     * @param source 认证方式
+     */
     void setSource(SourceType source);
 
-    Map<String, Map<String, Object>> getDetails();
+    /**
+     * 获得认证详情.
+     *
+     * @return 认证详情
+     */
+    Map<String, Map<String, Serializable>> getDetails();
 
-    void setDetails(Map<String, Map<String, Object>> details);
+    /**
+     * 设置认证详情.
+     *
+     * @param details 认证详情
+     */
+    void setDetails(Map<String, Map<String, Serializable>> details);
 }

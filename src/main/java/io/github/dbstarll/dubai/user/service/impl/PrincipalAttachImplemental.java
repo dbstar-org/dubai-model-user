@@ -1,6 +1,5 @@
 package io.github.dbstarll.dubai.user.service.impl;
 
-import com.mongodb.Function;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
@@ -40,16 +39,22 @@ public final class PrincipalAttachImplemental<E extends Entity & PrincipalBase, 
     private Codec<E> entityCodec;
     private CollectionNameGenerator collectionNameGenerator;
 
-    public PrincipalAttachImplemental(S service, Collection<E> collection) {
+    /**
+     * 构造PrincipalAttachImplemental.
+     *
+     * @param service    服务类
+     * @param collection 服务集合
+     */
+    public PrincipalAttachImplemental(final S service, final Collection<E> collection) {
         super(service, collection);
     }
 
-    public void setMongoDatabase(MongoDatabase mongoDatabase) {
+    public void setMongoDatabase(final MongoDatabase mongoDatabase) {
         this.registry = mongoDatabase.getCodecRegistry();
         this.entityCodec = registry.get(entityClass);
     }
 
-    public void setCollectionNameGenerator(CollectionNameGenerator collectionNameGenerator) {
+    public void setCollectionNameGenerator(final CollectionNameGenerator collectionNameGenerator) {
         this.collectionNameGenerator = collectionNameGenerator;
     }
 
@@ -62,28 +67,28 @@ public final class PrincipalAttachImplemental<E extends Entity & PrincipalBase, 
     }
 
     @Override
-    public Bson filterByPrincipalId(ObjectId principalId) {
+    public Bson filterByPrincipalId(final ObjectId principalId) {
         return eq(PrincipalBase.FIELD_NAME_PRINCIPAL_ID, principalId);
     }
 
     @Override
-    public long countByPrincipalId(ObjectId principalId) {
+    public long countByPrincipalId(final ObjectId principalId) {
         return service.count(filterByPrincipalId(principalId));
     }
 
     @Override
-    public FindIterable<E> findByPrincipalId(ObjectId principalId) {
+    public FindIterable<E> findByPrincipalId(final ObjectId principalId) {
         return service.find(filterByPrincipalId(principalId));
     }
 
     @Override
-    public DeleteResult deleteByPrincipalId(ObjectId principalId) {
+    public DeleteResult deleteByPrincipalId(final ObjectId principalId) {
         return getCollection().deleteMany(filterByPrincipalId(principalId));
     }
 
     @Override
-    public <P extends Entity, SPT extends Service<P>> MongoIterable<Entry<E, P>> findWithPrincipal(SPT principalService,
-                                                                                                   Bson filter) {
+    public <P extends Entity, SPT extends Service<P>> MongoIterable<Entry<E, P>> findWithPrincipal(
+            final SPT principalService, final Bson filter) {
         final Class<P> principalClass = principalService.getEntityClass();
         final Codec<P> principalCodec = registry.get(principalClass);
 
@@ -93,18 +98,15 @@ public final class PrincipalAttachImplemental<E extends Entity & PrincipalBase, 
             pipeline.add(Aggregates.match(matchFilter));
         }
         pipeline.add(Aggregates.lookup(collectionNameGenerator.generateCollectionName(principalClass),
-                PrincipalBase.FIELD_NAME_PRINCIPAL_ID, Entity.FIELD_NAME_ID, "principals"));
+                PrincipalBase.FIELD_NAME_PRINCIPAL_ID, Entity.FIELD_NAME_ID, "_principals"));
 
-        return getCollection().aggregate(pipeline, BsonDocument.class).map(new Function<BsonDocument, Entry<E, P>>() {
-            @Override
-            public Entry<E, P> apply(BsonDocument t) {
-                final BsonArray principals = t.getArray("principals");
-                final E entity = entityCodec.decode(t.asBsonReader(), decoderContext);
-                final P principal = principals.size() > 0
-                        ? principalCodec.decode(((BsonDocument) principals.get(0)).asBsonReader(), decoderContext)
-                        : null;
-                return EntryWrapper.wrap(entity, principal);
-            }
+        return getCollection().aggregate(pipeline, BsonDocument.class).map(t -> {
+            final BsonArray principals = t.getArray("_principals");
+            final E entity = entityCodec.decode(t.asBsonReader(), decoderContext);
+            final P principal = principals.size() > 0
+                    ? principalCodec.decode(((BsonDocument) principals.get(0)).asBsonReader(), decoderContext)
+                    : null;
+            return EntryWrapper.wrap(entity, principal);
         });
     }
 
@@ -117,7 +119,7 @@ public final class PrincipalAttachImplemental<E extends Entity & PrincipalBase, 
     public Validation<E> finalPrincipalIdValidation() {
         return new AbstractEntityValidation() {
             @Override
-            public void validate(E entity, E original, Validate validate) {
+            public void validate(final E entity, final E original, final Validate validate) {
                 if (entity.getPrincipalId() == null) {
                     validate.addFieldError(PrincipalBase.FIELD_NAME_PRINCIPAL_ID, "主体未设置");
                 } else if (original != null && !entity.getPrincipalId().equals(original.getPrincipalId())) {

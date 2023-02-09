@@ -7,10 +7,21 @@ import org.apache.commons.lang3.StringUtils;
 public class UsernameValidator {
     private final UsernameProperties usernameProperties;
 
-    public UsernameValidator(UsernameProperties usernameProperties) {
+    /**
+     * 构造用户名校验器.
+     *
+     * @param usernameProperties 用户名校验的配置属性
+     */
+    public UsernameValidator(final UsernameProperties usernameProperties) {
         this.usernameProperties = usernameProperties;
     }
 
+    /**
+     * 校验用户名是否合规.
+     *
+     * @param username
+     * @param validate
+     */
     public void validate(final String username, final Validate validate) {
         validate(username, validate, UsernamePasswordCredentials.FIELD_USERNAME);
     }

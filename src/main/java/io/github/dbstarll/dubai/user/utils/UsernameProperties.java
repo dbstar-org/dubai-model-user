@@ -6,12 +6,12 @@ public class UsernameProperties implements Serializable {
     private static final long serialVersionUID = 1723263105832030610L;
 
     /**
-     * 最小密码长度.
+     * 用户名最小长度.
      */
     private int minLen = 2;
 
     /**
-     * 最大密码长度.
+     * 用户名最大长度.
      */
     private int maxLen = 16;
 
@@ -19,7 +19,7 @@ public class UsernameProperties implements Serializable {
         return minLen;
     }
 
-    public void setMinLen(int minLen) {
+    public void setMinLen(final int minLen) {
         this.minLen = minLen;
     }
 
@@ -27,7 +27,7 @@ public class UsernameProperties implements Serializable {
         return maxLen;
     }
 
-    public void setMaxLen(int maxLen) {
+    public void setMaxLen(final int maxLen) {
         this.maxLen = maxLen;
     }
 }

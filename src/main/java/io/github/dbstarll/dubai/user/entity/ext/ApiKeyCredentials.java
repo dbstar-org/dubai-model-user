@@ -6,6 +6,7 @@ import io.github.dbstarll.dubai.user.entity.enums.SourceType;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.conversions.Bson;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import static org.apache.commons.lang3.Validate.notBlank;
@@ -17,30 +18,45 @@ public final class ApiKeyCredentials extends AbstractCredentials {
     public static final String FIELD_KEY = "key";
     public static final String FIELD_SECRET = "secret";
 
-    ApiKeyCredentials(String appId, String key, String secret) {
+    ApiKeyCredentials(final String appId, final String key, final String secret) {
         put(FIELD_APP_ID, notBlank(appId, FIELD_APP_ID + " is blank"));
         put(FIELD_KEY, notBlank(key, FIELD_KEY + " is blank"));
         put(FIELD_SECRET, notBlank(secret, FIELD_SECRET + " is blank"));
     }
 
-    ApiKeyCredentials(Map<String, Object> map) {
+    ApiKeyCredentials(final Map<String, Serializable> map) {
         super(map);
     }
 
+    /**
+     * 获取appId.
+     *
+     * @return appId
+     */
     public String getAppId() {
         return (String) get(FIELD_APP_ID);
     }
 
+    /**
+     * 获取appKey.
+     *
+     * @return appKey
+     */
     public String getKey() {
         return (String) get(FIELD_KEY);
     }
 
+    /**
+     * 获取appSecret.
+     *
+     * @return appSecret
+     */
     public String getSecret() {
         return (String) get(FIELD_SECRET);
     }
 
     @Override
-    public void validate(Map<String, Object> original, Validate validate) {
+    public void validate(final Map<String, Serializable> original, final Validate validate) {
         if (StringUtils.isBlank(getAppId())) {
             validate.addFieldError(FIELD_CREDENTIALS, FIELD_APP_ID + "未设置");
         }
@@ -67,7 +83,7 @@ public final class ApiKeyCredentials extends AbstractCredentials {
      * @param key   key
      * @return 唯一filter
      */
-    public static Bson distinctFilter(String appId, String key) {
+    public static Bson distinctFilter(final String appId, final String key) {
         return Filters.and(Filters.eq("source", SourceType.ApiKey),
                 Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_APP_ID, appId),
                 Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_KEY, key));

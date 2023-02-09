@@ -7,6 +7,6 @@ import io.github.dbstarll.dubai.user.service.attach.CredentialServiceAttach;
 import io.github.dbstarll.dubai.user.service.attach.PrincipalAttach;
 
 @EntityService
-public interface CredentialService
-        extends UserServices<Credential>, PrincipalAttach<Credential>, DefunctAttach<Credential>, CredentialServiceAttach {
+public interface CredentialService extends UserServices<Credential>,
+        PrincipalAttach<Credential>, DefunctAttach<Credential>, CredentialServiceAttach {
 }

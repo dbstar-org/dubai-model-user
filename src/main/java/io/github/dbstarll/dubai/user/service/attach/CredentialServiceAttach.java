@@ -7,5 +7,11 @@ import org.bson.conversions.Bson;
 
 @Implementation(CredentialServiceImplemental.class)
 public interface CredentialServiceAttach extends UserAttachs {
+    /**
+     * 按认证方式过滤.
+     *
+     * @param source 认证方式
+     * @return 过滤条件
+     */
     Bson filterBySource(SourceType source);
 }

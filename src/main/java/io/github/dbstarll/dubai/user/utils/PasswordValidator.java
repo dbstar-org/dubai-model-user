@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 public class PasswordValidator {
     private final PasswordProperties passwordProperties;
 
-    public PasswordValidator(PasswordProperties passwordProperties) {
+    public PasswordValidator(final PasswordProperties passwordProperties) {
         this.passwordProperties = passwordProperties;
     }
 
@@ -62,7 +62,8 @@ public class PasswordValidator {
                 complexity++;
             }
             if (complexity < passwordProperties.getComplexity()) {
-                validate.addFieldError(field, "密码太简单，必须包含大写字母/小写字母/数字/特殊字符中的" + passwordProperties.getComplexity() + "种");
+                validate.addFieldError(field,
+                        "密码太简单，必须包含大写字母/小写字母/数字/特殊字符中的" + passwordProperties.getComplexity() + "种");
             }
         }
 
@@ -73,8 +74,8 @@ public class PasswordValidator {
         // private int warnDays = 7;
     }
 
-    private static boolean checkCharacter(final Validate validate, final String field, final int expect, final int actual,
-                                          final String title) {
+    private static boolean checkCharacter(final Validate validate, final String field, final int expect,
+                                          final int actual, final String title) {
         if (expect < 0 && actual > 0) {
             validate.addFieldError(field, "密码中不允许使用" + title);
         } else if (actual < expect) {

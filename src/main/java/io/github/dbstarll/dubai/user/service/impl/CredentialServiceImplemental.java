@@ -19,12 +19,18 @@ import java.util.List;
 
 public final class CredentialServiceImplemental extends UserImplementals<Credential, CredentialService>
         implements CredentialServiceAttach {
-    public CredentialServiceImplemental(CredentialService service, Collection<Credential> collection) {
+    /**
+     * 构造CredentialServiceImplemental.
+     *
+     * @param service    服务类
+     * @param collection 集合类
+     */
+    public CredentialServiceImplemental(final CredentialService service, final Collection<Credential> collection) {
         super(service, collection);
     }
 
     @Override
-    public Bson filterBySource(SourceType source) {
+    public Bson filterBySource(final SourceType source) {
         return Filters.eq("source", source);
     }
 
@@ -37,7 +43,7 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
     public Validation<Credential> sourceValidation() {
         return new AbstractEntityValidation() {
             @Override
-            public void validate(Credential entity, Credential original, Validate validate) {
+            public void validate(final Credential entity, final Credential original, final Validate validate) {
                 if (entity.getSource() == null) {
                     validate.addFieldError("source", "来源未设置");
                 } else if (original != null && !entity.getSource().equals(original.getSource())) {
@@ -56,12 +62,12 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
     public Validation<Credential> credentialsValidation() {
         return new AbstractEntityValidation() {
             @Override
-            public void validate(Credential entity, Credential original, Validate validate) {
+            public void validate(final Credential entity, final Credential original, final Validate validate) {
                 if (entity.getCredentials() == null || entity.getCredentials().isEmpty()) {
                     validate.addFieldError(CredentialDetails.FIELD_CREDENTIALS, "凭据未设置");
                 } else if (entity.getCredentials() instanceof CredentialDetails) {
-                    ((CredentialDetails) entity.getCredentials()).validate(original == null ? null : original.getCredentials(),
-                            validate);
+                    ((CredentialDetails) entity.getCredentials()).
+                            validate(original == null ? null : original.getCredentials(), validate);
                 }
             }
         };
@@ -76,7 +82,7 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
     public Validation<Credential> duplicateValidation() {
         return new AbstractEntityValidation() {
             @Override
-            public void validate(Credential entity, Credential original, Validate validate) {
+            public void validate(final Credential entity, final Credential original, final Validate validate) {
                 if (!validate.hasErrors()) {
                     if (original == null) {
                         if (service.count(Filters.and(service.filterByPrincipalId(entity.getPrincipalId()),

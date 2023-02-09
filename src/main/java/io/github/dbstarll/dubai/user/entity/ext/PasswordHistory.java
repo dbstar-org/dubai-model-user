@@ -12,15 +12,31 @@ public final class PasswordHistory implements Serializable {
     private final String password;
     private final Date date;
 
-    public PasswordHistory(String password, Date date) {
+    /**
+     * 历史设置过的密码信息.
+     *
+     * @param password 密码
+     * @param date     设置时间
+     */
+    public PasswordHistory(final String password, final Date date) {
         this.password = notBlank(password, "password is blank");
         this.date = notNull(date, "date is null");
     }
 
+    /**
+     * 获得密码.
+     *
+     * @return 密码
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * 获得设置时间.
+     *
+     * @return 设置时间
+     */
     public Date getDate() {
         return date;
     }
@@ -35,7 +51,7 @@ public final class PasswordHistory implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }

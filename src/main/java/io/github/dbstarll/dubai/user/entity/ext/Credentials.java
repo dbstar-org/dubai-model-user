@@ -43,7 +43,7 @@ public final class Credentials {
     public static Credential miniProgram(final String appId, final String openid) {
         final Credential credential = EntityFactory.newInstance(Credential.class);
         credential.setSource(MiniProgram);
-        credential.setCredentials(new MiniProgramCredentials(appId, openid));
+        credential.setCredentials(new MiniProgramCredentials(appId, openid).map());
         return credential;
     }
 
@@ -59,7 +59,7 @@ public final class Credentials {
                                               final List<PasswordHistory> histories) {
         final Credential credential = EntityFactory.newInstance(Credential.class);
         credential.setSource(UsernamePassword);
-        credential.setCredentials(new UsernamePasswordCredentials(username, password, histories));
+        credential.setCredentials(new UsernamePasswordCredentials(username, password, histories).map());
         return credential;
     }
 
@@ -71,10 +71,10 @@ public final class Credentials {
      * @param secret secret
      * @return ApiKeyCredentials
      */
-    public static Credential apiKey(String appId, String key, String secret) {
+    public static Credential apiKey(final String appId, final String key, final String secret) {
         final Credential credential = EntityFactory.newInstance(Credential.class);
         credential.setSource(ApiKey);
-        credential.setCredentials(new ApiKeyCredentials(appId, key, secret));
+        credential.setCredentials(new ApiKeyCredentials(appId, key, secret).map());
         return credential;
     }
 }
