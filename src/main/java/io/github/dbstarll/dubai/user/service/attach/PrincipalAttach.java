@@ -53,10 +53,10 @@ public interface PrincipalAttach<E extends Entity & PrincipalBase> extends CoreA
      *
      * @param principalService 外部主体服务
      * @param filter           过滤条件
-     * @param <P>              外部关联主体的实体类
-     * @param <SPT>            外部关联主体的服务类
+     * @param <E1>             外部关联主体的实体类
+     * @param <S1>             外部关联主体的服务类
      * @return 实体与外部主体关联的结果列表
      */
-    <P extends Entity, SPT extends Service<P>> MongoIterable<Entry<E, P>> findWithPrincipal(SPT principalService,
-                                                                                            Bson filter);
+    <E1 extends Entity, S1 extends Service<E1>> MongoIterable<Entry<E, E1>> findWithPrincipal(S1 principalService,
+                                                                                              Bson filter);
 }

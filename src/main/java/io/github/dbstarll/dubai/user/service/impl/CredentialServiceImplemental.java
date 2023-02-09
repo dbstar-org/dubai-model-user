@@ -8,7 +8,6 @@ import io.github.dbstarll.dubai.model.service.validation.GeneralValidation;
 import io.github.dbstarll.dubai.model.service.validation.GeneralValidation.Position;
 import io.github.dbstarll.dubai.model.service.validation.Validation;
 import io.github.dbstarll.dubai.user.entity.Credential;
-import io.github.dbstarll.dubai.user.entity.enums.SourceType;
 import io.github.dbstarll.dubai.user.entity.ext.CredentialDetails;
 import io.github.dbstarll.dubai.user.service.CredentialService;
 import io.github.dbstarll.dubai.user.service.attach.CredentialServiceAttach;
@@ -27,30 +26,6 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
      */
     public CredentialServiceImplemental(final CredentialService service, final Collection<Credential> collection) {
         super(service, collection);
-    }
-
-    @Override
-    public Bson filterBySource(final SourceType source) {
-        return Filters.eq("source", source);
-    }
-
-    /**
-     * 来源校验.
-     *
-     * @return sourceValidation
-     */
-    @GeneralValidation
-    public Validation<Credential> sourceValidation() {
-        return new AbstractEntityValidation() {
-            @Override
-            public void validate(final Credential entity, final Credential original, final Validate validate) {
-                if (entity.getSource() == null) {
-                    validate.addFieldError("source", "来源未设置");
-                } else if (original != null && !entity.getSource().equals(original.getSource())) {
-                    validate.addFieldError("source", "来源不可更改");
-                }
-            }
-        };
     }
 
     /**
@@ -86,8 +61,8 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
                 if (!validate.hasErrors()) {
                     if (original == null) {
                         if (service.count(Filters.and(service.filterByPrincipalId(entity.getPrincipalId()),
-                                service.filterBySource(entity.getSource()))) > 0) {
-                            validate.addActionError("同一来源下的主体必须唯一");
+                                service.filterByAuthType(entity.getSource()))) > 0) {
+                            validate.addActionError("同一认证类型下的主体必须唯一");
                         }
                     }
 
