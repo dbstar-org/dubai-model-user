@@ -17,12 +17,12 @@ public class UsernameProperties implements Serializable {
     private String pattern = DEFAULT_PATTERN;
 
     /**
-     * 用户名最小字符长度.
+     * 用户名最小字符长度，若<=0则不限制.
      */
     private int minLen = DEFAULT_MIN_LEN;
 
     /**
-     * 用户名最大字符长度.
+     * 用户名最大字符长度，若<=0则不限制.
      */
     private int maxLen = DEFAULT_MAX_LEN;
 
