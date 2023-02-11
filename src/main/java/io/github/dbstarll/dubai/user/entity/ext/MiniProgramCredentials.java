@@ -2,11 +2,11 @@ package io.github.dbstarll.dubai.user.entity.ext;
 
 import com.mongodb.client.model.Filters;
 import io.github.dbstarll.dubai.model.service.validate.Validate;
-import io.github.dbstarll.dubai.user.entity.enums.SourceType;
+import io.github.dbstarll.dubai.user.entity.enums.AuthType;
+import io.github.dbstarll.dubai.user.entity.join.AuthTypable;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.conversions.Bson;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import static org.apache.commons.lang3.Validate.notBlank;
@@ -22,7 +22,7 @@ public final class MiniProgramCredentials extends AbstractCredentials {
         put(FIELD_OPENID, notBlank(openid, FIELD_OPENID + " is blank"));
     }
 
-    MiniProgramCredentials(final Map<String, Serializable> map) {
+    MiniProgramCredentials(final Map<String, Object> map) {
         super(map);
     }
 
@@ -32,7 +32,7 @@ public final class MiniProgramCredentials extends AbstractCredentials {
      * @return appId
      */
     public String getAppId() {
-        return (String) get(FIELD_APP_ID);
+        return get(FIELD_APP_ID);
     }
 
     /**
@@ -41,18 +41,18 @@ public final class MiniProgramCredentials extends AbstractCredentials {
      * @return openId
      */
     public String getOpenid() {
-        return (String) get(FIELD_OPENID);
+        return get(FIELD_OPENID);
     }
 
     @Override
-    public void validate(final Map<String, Serializable> original, final Validate validate) {
+    public void validate(final Map<String, Object> original, final Validate validate) {
         if (StringUtils.isBlank(getAppId())) {
             validate.addFieldError(FIELD_CREDENTIALS, FIELD_APP_ID + "未设置");
         }
         if (StringUtils.isBlank(getOpenid())) {
             validate.addFieldError(FIELD_CREDENTIALS, FIELD_OPENID + "未设置");
         }
-        if (original != null && !this.equals(original)) {
+        if (original != null && !this.equals(new MiniProgramCredentials(original))) {
             validate.addFieldError(FIELD_CREDENTIALS, "凭据不能修改");
         }
     }
@@ -70,7 +70,7 @@ public final class MiniProgramCredentials extends AbstractCredentials {
      * @return 唯一filter
      */
     public static Bson distinctFilter(final String appId, final String openid) {
-        return Filters.and(Filters.eq("source", SourceType.MiniProgram),
+        return Filters.and(Filters.eq(AuthTypable.FIELD_NAME_AUTH_TYPE, AuthType.MiniProgram),
                 Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_APP_ID, appId),
                 Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_OPENID, openid));
     }

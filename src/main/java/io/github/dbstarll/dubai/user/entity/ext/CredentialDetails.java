@@ -3,7 +3,6 @@ package io.github.dbstarll.dubai.user.entity.ext;
 import io.github.dbstarll.dubai.model.service.validate.Validate;
 import org.bson.conversions.Bson;
 
-import java.io.Serializable;
 import java.util.Map;
 
 public interface CredentialDetails {
@@ -15,7 +14,7 @@ public interface CredentialDetails {
      * @param original 未修改前的历史凭据详情
      * @param validate 校验器
      */
-    void validate(Map<String, Serializable> original, Validate validate);
+    void validate(Map<String, Object> original, Validate validate);
 
     /**
      * 返回检查凭据唯一性的过滤条件.

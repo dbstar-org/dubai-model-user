@@ -60,7 +60,7 @@ public final class AuthTypeAttachImplemental<E extends Entity & AuthTypable, S e
             public void validate(final E entity, final E original, final Validate validate) {
                 if (entity.getSource() == null) {
                     validate.addFieldError(AuthTypable.FIELD_NAME_AUTH_TYPE, "认证类型未设置");
-                } else if (original != null && !entity.getSource().equals(original.getSource())) {
+                } else if (original != null && entity.getSource() != original.getSource()) {
                     validate.addFieldError(AuthTypable.FIELD_NAME_AUTH_TYPE, "认证类型不可更改");
                 }
             }

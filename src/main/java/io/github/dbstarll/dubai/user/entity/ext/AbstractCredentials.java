@@ -1,5 +1,6 @@
 package io.github.dbstarll.dubai.user.entity.ext;
 
+import io.github.dbstarll.dubai.user.entity.Credential;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.io.Serializable;
@@ -7,35 +8,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 abstract class AbstractCredentials implements CredentialDetails, Cloneable, Serializable {
-    private static final long serialVersionUID = 7011651370922942849L;
+    private final Map<String, Object> map;
 
-    private final Map<String, Serializable> map;
-
-    AbstractCredentials() {
+    protected AbstractCredentials() {
         this(null);
     }
 
-    AbstractCredentials(final Map<String, Serializable> map) {
+    protected AbstractCredentials(final Map<String, Object> map) {
         this.map = map == null ? new HashMap<>() : new HashMap<>(map);
     }
 
-    public final boolean containsKey(final Object key) {
-        return map.containsKey(key);
+    @SuppressWarnings("unchecked")
+    protected final <C> C get(final String key) {
+        return (C) map.get(key);
     }
 
-    public final Serializable get(final Object key) {
-        return map.get(key);
-    }
-
-    public final Object put(final String key, final Serializable value) {
-        return map.put(key, value);
+    protected final void put(final String key, final Object value) {
+        map.put(key, value);
     }
 
     @Override
     public final boolean equals(final Object o) {
         if (this == o) {
             return true;
-        } else if (!(o instanceof AbstractCredentials)) {
+        } else if (o == null) {
+            return false;
+        } else if (getClass() != o.getClass()) {
             return false;
         }
         final AbstractCredentials that = (AbstractCredentials) o;
@@ -59,7 +57,8 @@ abstract class AbstractCredentials implements CredentialDetails, Cloneable, Seri
         return getClass().getName() + ": " + map;
     }
 
-    Map<String, Serializable> map() {
-        return this.map;
+    final Credential apply(final Credential credential) {
+        credential.setCredentials(this.map);
+        return credential;
     }
 }
