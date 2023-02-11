@@ -83,7 +83,7 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
         if (StringUtils.isBlank(getPassword())) {
             validate.addFieldError(FIELD_CREDENTIALS, "密码未设置");
         }
-
+        //TODO 换个地方追加PasswordHistory
         if (!validate.hasErrors()) {
             List<Object> histories;
             if (original != null) {

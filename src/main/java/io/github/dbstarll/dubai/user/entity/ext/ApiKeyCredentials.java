@@ -21,7 +21,7 @@ public final class ApiKeyCredentials extends AbstractCredentials {
     ApiKeyCredentials(final String appId, final String key, final String secret) {
         put(FIELD_APP_ID, notBlank(appId, FIELD_APP_ID + " is blank"));
         put(FIELD_KEY, notBlank(key, FIELD_KEY + " is blank"));
-        put(FIELD_SECRET, notBlank(secret, FIELD_SECRET + " is blank"));
+        setSecret(secret);
     }
 
     ApiKeyCredentials(final Map<String, Object> map) {
@@ -55,6 +55,15 @@ public final class ApiKeyCredentials extends AbstractCredentials {
         return get(FIELD_SECRET);
     }
 
+    /**
+     * 设置新的Secret.
+     *
+     * @param secret 新的Secret
+     */
+    public void setSecret(final String secret) {
+        put(FIELD_SECRET, notBlank(secret, FIELD_SECRET + " is blank"));
+    }
+
     @Override
     public void validate(final Map<String, Object> original, final Validate validate) {
         if (StringUtils.isBlank(getAppId())) {
@@ -66,8 +75,14 @@ public final class ApiKeyCredentials extends AbstractCredentials {
         if (StringUtils.isBlank(getSecret())) {
             validate.addFieldError(FIELD_CREDENTIALS, FIELD_SECRET + "未设置");
         }
-        if (original != null && !this.equals(new ApiKeyCredentials(original))) {
-            validate.addFieldError(FIELD_CREDENTIALS, "凭据不能修改");
+        if (original != null) {
+            final ApiKeyCredentials o = new ApiKeyCredentials(original);
+            if (!getAppId().equals(o.getAppId())) {
+                validate.addFieldError(FIELD_CREDENTIALS, "凭据[" + FIELD_APP_ID + "]不能修改");
+            }
+            if (!getKey().equals(o.getKey())) {
+                validate.addFieldError(FIELD_CREDENTIALS, "凭据[" + FIELD_KEY + "]不能修改");
+            }
         }
     }
 

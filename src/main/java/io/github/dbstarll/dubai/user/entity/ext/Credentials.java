@@ -20,9 +20,9 @@ public final class Credentials {
      *
      * @param credential credential
      * @return CredentialDetails
-     * @throws UnsupportedOperationException 目前尚不支持的AuthType时抛出
+     * @throws UnsupportedAuthTypeException 目前尚不支持的AuthType时抛出
      */
-    public static CredentialDetails credentials(final Credential credential) {
+    public static CredentialDetails credentials(final Credential credential) throws UnsupportedAuthTypeException {
         switch (notNull(credential, "credential is null").getSource()) {
             case MiniProgram:
                 return new MiniProgramCredentials(credential.getCredentials());
@@ -31,7 +31,7 @@ public final class Credentials {
             case ApiKey:
                 return new ApiKeyCredentials(credential.getCredentials());
             default:
-                throw new UnsupportedOperationException(credential.getSource().toString());
+                throw new UnsupportedAuthTypeException(credential.getSource());
         }
     }
 

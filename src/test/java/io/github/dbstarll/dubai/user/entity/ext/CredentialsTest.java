@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 class CredentialsTest {
     @Test
-    void usernamePassword() {
+    void usernamePassword() throws UnsupportedAuthTypeException {
         final Credential credential = Credentials.usernamePassword("username", "password", null);
         assertSame(AuthType.UsernamePassword, credential.getSource());
         final UsernamePasswordCredentials credentials = assertInstanceOf(UsernamePasswordCredentials.class,
@@ -24,7 +24,7 @@ class CredentialsTest {
     }
 
     @Test
-    void miniProgram() {
+    void miniProgram() throws UnsupportedAuthTypeException {
         final Credential credential = Credentials.miniProgram("appId", "openId");
         assertSame(AuthType.MiniProgram, credential.getSource());
         final MiniProgramCredentials credentials = assertInstanceOf(MiniProgramCredentials.class,
@@ -34,7 +34,7 @@ class CredentialsTest {
     }
 
     @Test
-    void apiKey() {
+    void apiKey() throws UnsupportedAuthTypeException {
         final Credential credential = Credentials.apiKey("appId", "key", "secret");
         assertSame(AuthType.ApiKey, credential.getSource());
         final ApiKeyCredentials credentials = assertInstanceOf(ApiKeyCredentials.class,
@@ -48,7 +48,8 @@ class CredentialsTest {
     void credentials() {
         final Credential credential = EntityFactory.newInstance(Credential.class);
         credential.setSource(AuthType.X509);
-        final Exception e = assertThrowsExactly(UnsupportedOperationException.class, () -> Credentials.credentials(credential));
-        assertEquals("X509", e.getMessage());
+        final Exception e = assertThrowsExactly(UnsupportedAuthTypeException.class,
+                () -> Credentials.credentials(credential));
+        assertEquals("尚不支持: X509", e.getMessage());
     }
 }

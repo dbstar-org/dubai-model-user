@@ -9,6 +9,8 @@ import io.github.dbstarll.dubai.model.service.validation.GeneralValidation.Posit
 import io.github.dbstarll.dubai.model.service.validation.Validation;
 import io.github.dbstarll.dubai.user.entity.Credential;
 import io.github.dbstarll.dubai.user.entity.ext.CredentialDetails;
+import io.github.dbstarll.dubai.user.entity.ext.Credentials;
+import io.github.dbstarll.dubai.user.entity.ext.UnsupportedAuthTypeException;
 import io.github.dbstarll.dubai.user.service.CredentialService;
 import io.github.dbstarll.dubai.user.service.attach.CredentialServiceAttach;
 import org.bson.conversions.Bson;
@@ -40,9 +42,15 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
             public void validate(final Credential entity, final Credential original, final Validate validate) {
                 if (entity.getCredentials() == null || entity.getCredentials().isEmpty()) {
                     validate.addFieldError(CredentialDetails.FIELD_CREDENTIALS, "凭据未设置");
-                } else if (entity.getCredentials() instanceof CredentialDetails) {
-                    ((CredentialDetails) entity.getCredentials()).
-                            validate(original == null ? null : original.getCredentials(), validate);
+                } else {
+                    final CredentialDetails details;
+                    try {
+                        details = Credentials.credentials(entity);
+                    } catch (UnsupportedAuthTypeException e) {
+                        validate.addActionError(e.getMessage());
+                        return;
+                    }
+                    details.validate(original == null ? null : original.getCredentials(), validate);
                 }
             }
         };
@@ -65,16 +73,20 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
                             validate.addActionError("同一认证类型下的主体必须唯一");
                         }
                     }
-
-                    if (entity.getCredentials() instanceof CredentialDetails) {
-                        final List<Bson> filters = new ArrayList<>();
-                        filters.add(((CredentialDetails) entity.getCredentials()).distinctFilter());
-                        if (original != null) {
-                            filters.add(Filters.ne(Entity.FIELD_NAME_ID, original.getId()));
-                        }
-                        if (service.count(Filters.and(filters)) > 0) {
-                            validate.addFieldError(CredentialDetails.FIELD_CREDENTIALS, "凭据不唯一");
-                        }
+                    final CredentialDetails details;
+                    try {
+                        details = Credentials.credentials(entity);
+                    } catch (UnsupportedAuthTypeException e) {
+                        validate.addActionError(e.getMessage());
+                        return;
+                    }
+                    final List<Bson> filters = new ArrayList<>();
+                    filters.add(details.distinctFilter());
+                    if (original != null) {
+                        filters.add(Filters.ne(Entity.FIELD_NAME_ID, original.getId()));
+                    }
+                    if (service.count(Filters.and(filters)) > 0) {
+                        validate.addFieldError(CredentialDetails.FIELD_CREDENTIALS, "凭据不唯一");
                     }
                 }
             }
