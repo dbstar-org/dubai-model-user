@@ -5,9 +5,10 @@ import io.github.dbstarll.dubai.user.entity.Credential;
 
 import java.util.List;
 
-import static io.github.dbstarll.dubai.user.entity.enums.SourceType.ApiKey;
-import static io.github.dbstarll.dubai.user.entity.enums.SourceType.MiniProgram;
-import static io.github.dbstarll.dubai.user.entity.enums.SourceType.UsernamePassword;
+import static io.github.dbstarll.dubai.user.entity.enums.AuthType.ApiKey;
+import static io.github.dbstarll.dubai.user.entity.enums.AuthType.MiniProgram;
+import static io.github.dbstarll.dubai.user.entity.enums.AuthType.UsernamePassword;
+import static org.apache.commons.lang3.Validate.notNull;
 
 public final class Credentials {
     private Credentials() {
@@ -15,13 +16,14 @@ public final class Credentials {
     }
 
     /**
-     * 从credential解析CredentialDetails.
+     * 从credential解析CredentialDetails，目前只支持MiniProgram、UsernamePassword和ApiKey.
      *
      * @param credential credential
      * @return CredentialDetails
+     * @throws UnsupportedOperationException 目前尚不支持的AuthType时抛出
      */
     public static CredentialDetails credentials(final Credential credential) {
-        switch (credential.getSource()) {
+        switch (notNull(credential, "credential is null").getSource()) {
             case MiniProgram:
                 return new MiniProgramCredentials(credential.getCredentials());
             case UsernamePassword:
@@ -29,7 +31,7 @@ public final class Credentials {
             case ApiKey:
                 return new ApiKeyCredentials(credential.getCredentials());
             default:
-                return null;
+                throw new UnsupportedOperationException(credential.getSource().toString());
         }
     }
 
@@ -43,8 +45,7 @@ public final class Credentials {
     public static Credential miniProgram(final String appId, final String openid) {
         final Credential credential = EntityFactory.newInstance(Credential.class);
         credential.setSource(MiniProgram);
-        credential.setCredentials(new MiniProgramCredentials(appId, openid).map());
-        return credential;
+        return new MiniProgramCredentials(appId, openid).apply(credential);
     }
 
     /**
@@ -59,8 +60,7 @@ public final class Credentials {
                                               final List<PasswordHistory> histories) {
         final Credential credential = EntityFactory.newInstance(Credential.class);
         credential.setSource(UsernamePassword);
-        credential.setCredentials(new UsernamePasswordCredentials(username, password, histories).map());
-        return credential;
+        return new UsernamePasswordCredentials(username, password, histories).apply(credential);
     }
 
     /**
@@ -74,7 +74,6 @@ public final class Credentials {
     public static Credential apiKey(final String appId, final String key, final String secret) {
         final Credential credential = EntityFactory.newInstance(Credential.class);
         credential.setSource(ApiKey);
-        credential.setCredentials(new ApiKeyCredentials(appId, key, secret).map());
-        return credential;
+        return new ApiKeyCredentials(appId, key, secret).apply(credential);
     }
 }
