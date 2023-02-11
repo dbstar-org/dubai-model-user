@@ -8,7 +8,6 @@ import java.util.List;
 import static io.github.dbstarll.dubai.user.entity.enums.AuthType.ApiKey;
 import static io.github.dbstarll.dubai.user.entity.enums.AuthType.MiniProgram;
 import static io.github.dbstarll.dubai.user.entity.enums.AuthType.UsernamePassword;
-import static org.apache.commons.lang3.Validate.notNull;
 
 public final class Credentials {
     private Credentials() {
@@ -19,19 +18,23 @@ public final class Credentials {
      * 从credential解析CredentialDetails，目前只支持MiniProgram、UsernamePassword和ApiKey.
      *
      * @param credential credential
-     * @return CredentialDetails
+     * @return CredentialDetails, null if credential is null
      * @throws UnsupportedAuthTypeException 目前尚不支持的AuthType时抛出
      */
     public static CredentialDetails credentials(final Credential credential) throws UnsupportedAuthTypeException {
-        switch (notNull(credential, "credential is null").getSource()) {
-            case MiniProgram:
-                return new MiniProgramCredentials(credential.getCredentials());
-            case UsernamePassword:
-                return new UsernamePasswordCredentials(credential.getCredentials());
-            case ApiKey:
-                return new ApiKeyCredentials(credential.getCredentials());
-            default:
-                throw new UnsupportedAuthTypeException(credential.getSource());
+        if (credential == null) {
+            return null;
+        } else {
+            switch (credential.getSource()) {
+                case MiniProgram:
+                    return new MiniProgramCredentials(credential.getCredentials());
+                case UsernamePassword:
+                    return new UsernamePasswordCredentials(credential.getCredentials());
+                case ApiKey:
+                    return new ApiKeyCredentials(credential.getCredentials());
+                default:
+                    throw new UnsupportedAuthTypeException(credential.getSource());
+            }
         }
     }
 

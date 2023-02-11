@@ -15,11 +15,11 @@ public final class MiniProgramCredentials extends AbstractCredentials {
     private static final long serialVersionUID = 5632135628982288707L;
 
     public static final String FIELD_APP_ID = "appId";
-    public static final String FIELD_OPENID = "openid";
+    public static final String FIELD_OPEN_ID = "openid";
 
     MiniProgramCredentials(final String appId, final String openid) {
         put(FIELD_APP_ID, notBlank(appId, FIELD_APP_ID + " is blank"));
-        put(FIELD_OPENID, notBlank(openid, FIELD_OPENID + " is blank"));
+        put(FIELD_OPEN_ID, notBlank(openid, FIELD_OPEN_ID + " is blank"));
     }
 
     MiniProgramCredentials(final Map<String, Object> map) {
@@ -41,19 +41,27 @@ public final class MiniProgramCredentials extends AbstractCredentials {
      * @return openId
      */
     public String getOpenid() {
-        return get(FIELD_OPENID);
+        return get(FIELD_OPEN_ID);
     }
 
     @Override
-    public void validate(final Map<String, Object> original, final Validate validate) {
+    public void validate(final CredentialDetails original, final Validate validate) {
         if (StringUtils.isBlank(getAppId())) {
             validate.addFieldError(FIELD_CREDENTIALS, FIELD_APP_ID + "未设置");
         }
         if (StringUtils.isBlank(getOpenid())) {
-            validate.addFieldError(FIELD_CREDENTIALS, FIELD_OPENID + "未设置");
+            validate.addFieldError(FIELD_CREDENTIALS, FIELD_OPEN_ID + "未设置");
         }
-        if (original != null && !this.equals(new MiniProgramCredentials(original))) {
-            validate.addFieldError(FIELD_CREDENTIALS, "凭据不能修改");
+        if (original instanceof MiniProgramCredentials) {
+            final MiniProgramCredentials o = (MiniProgramCredentials) original;
+            if (!getAppId().equals(o.getAppId())) {
+                validate.addFieldError(FIELD_CREDENTIALS, "凭据[" + FIELD_APP_ID + "]不能修改");
+            }
+            if (!getOpenid().equals(o.getOpenid())) {
+                validate.addFieldError(FIELD_CREDENTIALS, "凭据[" + FIELD_OPEN_ID + "]不能修改");
+            }
+        } else if (original != null) {
+            throw new UnsupportedOperationException("original not instanceof MiniProgramCredentials");
         }
     }
 
@@ -72,6 +80,6 @@ public final class MiniProgramCredentials extends AbstractCredentials {
     public static Bson distinctFilter(final String appId, final String openid) {
         return Filters.and(Filters.eq(AuthTypable.FIELD_NAME_AUTH_TYPE, AuthType.MiniProgram),
                 Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_APP_ID, appId),
-                Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_OPENID, openid));
+                Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_OPEN_ID, openid));
     }
 }

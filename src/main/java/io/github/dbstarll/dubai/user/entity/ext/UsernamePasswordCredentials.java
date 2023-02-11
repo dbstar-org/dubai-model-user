@@ -76,32 +76,31 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
     }
 
     @Override
-    public void validate(final Map<String, Object> original, final Validate validate) {
+    public void validate(final CredentialDetails original, final Validate validate) {
         if (StringUtils.isBlank(getUsername())) {
             validate.addFieldError(FIELD_CREDENTIALS, "用户名未设置");
         }
         if (StringUtils.isBlank(getPassword())) {
             validate.addFieldError(FIELD_CREDENTIALS, "密码未设置");
         }
-        //TODO 换个地方追加PasswordHistory
-        if (!validate.hasErrors()) {
-            List<Object> histories;
-            if (original != null) {
-                //noinspection unchecked
-                histories = (List<Object>) original.get(FIELD_HISTORIES);
-            } else {
-                histories = this.get(FIELD_HISTORIES);
+        if (original instanceof UsernamePasswordCredentials) {
+            final UsernamePasswordCredentials o = (UsernamePasswordCredentials) original;
+            //TODO 换个地方追加PasswordHistory
+            if (!validate.hasErrors()) {
+                List<PasswordHistory> histories = o.getHistories();
+                if (histories == null) {
+                    histories = new LinkedList<>();
+                }
+                if (histories.isEmpty() || !getPassword().equals(histories.get(0).getPassword())) {
+                    histories.add(0, new PasswordHistory(getPassword(), new Date()));
+                }
+                while (histories.size() > MAX_HISTORIES) {
+                    histories.remove(histories.size() - 1);
+                }
+                put(FIELD_HISTORIES, histories);
             }
-            if (histories == null) {
-                histories = new LinkedList<>();
-            }
-            if (histories.isEmpty() || !getPassword().equals(parsePasswordHistory(histories.get(0)).getPassword())) {
-                histories.add(0, new PasswordHistory(getPassword(), new Date()));
-            }
-            while (histories.size() > MAX_HISTORIES) {
-                histories.remove(histories.size() - 1);
-            }
-            put(FIELD_HISTORIES, histories);
+        } else if (original != null) {
+            throw new UnsupportedOperationException("original not instanceof UsernamePasswordCredentials");
         }
     }
 

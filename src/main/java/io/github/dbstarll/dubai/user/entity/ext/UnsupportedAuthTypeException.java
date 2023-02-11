@@ -2,7 +2,7 @@ package io.github.dbstarll.dubai.user.entity.ext;
 
 import io.github.dbstarll.dubai.user.entity.enums.AuthType;
 
-public class UnsupportedAuthTypeException extends Exception {
+public class UnsupportedAuthTypeException extends RuntimeException {
     /**
      * 构建一个UnsupportedAuthTypeException实例.
      *

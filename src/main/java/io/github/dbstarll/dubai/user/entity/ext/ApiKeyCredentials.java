@@ -65,7 +65,7 @@ public final class ApiKeyCredentials extends AbstractCredentials {
     }
 
     @Override
-    public void validate(final Map<String, Object> original, final Validate validate) {
+    public void validate(final CredentialDetails original, final Validate validate) {
         if (StringUtils.isBlank(getAppId())) {
             validate.addFieldError(FIELD_CREDENTIALS, FIELD_APP_ID + "未设置");
         }
@@ -75,14 +75,16 @@ public final class ApiKeyCredentials extends AbstractCredentials {
         if (StringUtils.isBlank(getSecret())) {
             validate.addFieldError(FIELD_CREDENTIALS, FIELD_SECRET + "未设置");
         }
-        if (original != null) {
-            final ApiKeyCredentials o = new ApiKeyCredentials(original);
+        if (original instanceof ApiKeyCredentials) {
+            final ApiKeyCredentials o = (ApiKeyCredentials) original;
             if (!getAppId().equals(o.getAppId())) {
                 validate.addFieldError(FIELD_CREDENTIALS, "凭据[" + FIELD_APP_ID + "]不能修改");
             }
             if (!getKey().equals(o.getKey())) {
                 validate.addFieldError(FIELD_CREDENTIALS, "凭据[" + FIELD_KEY + "]不能修改");
             }
+        } else if (original != null) {
+            throw new UnsupportedOperationException("original not instanceof ApiKeyCredentials");
         }
     }
 
