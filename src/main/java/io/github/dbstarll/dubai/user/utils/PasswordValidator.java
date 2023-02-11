@@ -133,10 +133,6 @@ public class PasswordValidator {
         return Duration.between(passwordHistory.getDate().toInstant(), now).toDays() < properties.getMinDays();
     }
 
-    // TODO 以下内容需要校验
-    // private int maxDays = 90;
-    // private int warnDays = 7;
-
     private void check(final Validate validate, final String field, final CharacterType type, final int actual) {
         final int expect = type.expect(properties);
         if (expect < 0) {

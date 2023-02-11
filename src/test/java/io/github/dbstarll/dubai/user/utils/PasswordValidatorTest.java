@@ -2,14 +2,18 @@ package io.github.dbstarll.dubai.user.utils;
 
 import io.github.dbstarll.dubai.model.service.validate.DefaultValidate;
 import io.github.dbstarll.dubai.model.service.validate.Validate;
+import io.github.dbstarll.dubai.user.entity.ext.PasswordHistory;
 import io.github.dbstarll.dubai.user.entity.ext.UsernamePasswordCredentials;
 import io.github.dbstarll.utils.lang.wrapper.EntryWrapper;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -154,6 +158,74 @@ class PasswordValidatorTest {
         properties.setComplexity(1);
         final Validate validate = new DefaultValidate();
         validator.validate("aaaaaaaaaa", validate);
+        assertFalse(validate.hasErrors());
+        assertFalse(validate.hasActionErrors());
+        assertFalse(validate.hasFieldErrors());
+    }
+
+    @Test
+    void validateHistory() {
+        final Validate validate = new DefaultValidate();
+        validator.validateHistory("aaaaaaaaaa", null, validate);
+        assertFalse(validate.hasErrors());
+        assertFalse(validate.hasActionErrors());
+        assertFalse(validate.hasFieldErrors());
+
+        validator.validateHistory("aaaaaaaaaa", new ArrayList<>(), validate);
+        assertFalse(validate.hasErrors());
+        assertFalse(validate.hasActionErrors());
+        assertFalse(validate.hasFieldErrors());
+
+        properties.setMinDays(1);
+        validator.validateHistory("abcdefgk", Arrays.asList(
+                new PasswordHistory("abcdefgh", DateUtils.addDays(new Date(), -2)),
+                new PasswordHistory("abcdefgi", DateUtils.addDays(new Date(), -3)),
+                new PasswordHistory("abcdefgj", DateUtils.addDays(new Date(), -4)),
+                new PasswordHistory("abcdefgk", DateUtils.addDays(new Date(), -5))
+        ), validate);
+        assertFalse(validate.hasErrors());
+        assertFalse(validate.hasActionErrors());
+        assertFalse(validate.hasFieldErrors());
+    }
+
+    @Test
+    void validateHistoryMinDays() {
+        properties.setMinDays(1);
+        final Validate validate = new DefaultValidate();
+        validator.validateHistory("aaaaaaaaaa", Collections.singletonList(
+                new PasswordHistory("abcde", DateUtils.addHours(new Date(), -2))), validate);
+        assertTrue(validate.hasErrors());
+        assertFalse(validate.hasActionErrors());
+        assertTrue(validate.hasFieldErrors());
+        assertEquals(1, validate.getFieldErrors().size());
+        final List<String> errors = validate.getFieldErrors().get(UsernamePasswordCredentials.FIELD_PASSWORD);
+        assertNotNull(errors);
+        assertEquals(Collections.singletonList("距离上一次修改密码的时间间隔不得小于1天"), errors);
+    }
+
+    @Test
+    void validateHistoryRemember() {
+        Validate validate = new DefaultValidate();
+        validator.validateHistory("abcdefgj", Arrays.asList(
+                new PasswordHistory("abcdefgh", DateUtils.addDays(new Date(), -1)),
+                new PasswordHistory("abcdefgi", DateUtils.addDays(new Date(), -2)),
+                new PasswordHistory("abcdefgj", DateUtils.addDays(new Date(), -3))
+        ), validate);
+        assertTrue(validate.hasErrors());
+        assertFalse(validate.hasActionErrors());
+        assertTrue(validate.hasFieldErrors());
+        assertEquals(1, validate.getFieldErrors().size());
+        final List<String> errors = validate.getFieldErrors().get(UsernamePasswordCredentials.FIELD_PASSWORD);
+        assertNotNull(errors);
+        assertEquals(Collections.singletonList("新密码与最近3次使用过的密码不能相同"), errors);
+
+        validate = new DefaultValidate();
+        properties.setRemember(0);
+        validator.validateHistory("abcdefgj", Arrays.asList(
+                new PasswordHistory("abcdefgh", DateUtils.addDays(new Date(), -1)),
+                new PasswordHistory("abcdefgi", DateUtils.addDays(new Date(), -2)),
+                new PasswordHistory("abcdefgj", DateUtils.addDays(new Date(), -3))
+        ), validate);
         assertFalse(validate.hasErrors());
         assertFalse(validate.hasActionErrors());
         assertFalse(validate.hasFieldErrors());

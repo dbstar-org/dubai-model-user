@@ -14,8 +14,6 @@ public class PasswordProperties implements Serializable {
     public static final int DEFAULT_SPECIAL = 0;
     public static final int DEFAULT_COMPLEXITY = 3;
     public static final int DEFAULT_MIN_DAYS = 0;
-    public static final int DEFAULT_MAX_DAYS = 90;
-    public static final int DEFAULT_WARN_DAYS = 7;
 
     /**
      * 禁止使用最近用过的密码个数，<=0表示不禁止.
@@ -61,16 +59,6 @@ public class PasswordProperties implements Serializable {
      * 最短多少天可以再次修改密码.
      */
     private int minDays = DEFAULT_MIN_DAYS;
-
-    /**
-     * 最长多少天必须修改密码.
-     */
-    private int maxDays = DEFAULT_MAX_DAYS;
-
-    /**
-     * 提前多少天提醒用户密码快到期了.
-     */
-    private int warnDays = DEFAULT_WARN_DAYS;
 
     /**
      * 禁止使用最近用过的密码个数，<=0表示不禁止.
@@ -232,41 +220,5 @@ public class PasswordProperties implements Serializable {
      */
     public void setMinDays(final int minDays) {
         this.minDays = minDays;
-    }
-
-    /**
-     * 获取最长多少天必须修改密码.
-     *
-     * @return 最长多少天必须修改密码
-     */
-    public int getMaxDays() {
-        return maxDays;
-    }
-
-    /**
-     * 设置最长多少天必须修改密码.
-     *
-     * @param maxDays 天数
-     */
-    public void setMaxDays(final int maxDays) {
-        this.maxDays = maxDays;
-    }
-
-    /**
-     * 获取提前多少天提醒用户密码快到期了.
-     *
-     * @return 提前多少天提醒用户密码快到期了.
-     */
-    public int getWarnDays() {
-        return warnDays;
-    }
-
-    /**
-     * 设置提前多少天提醒用户密码快到期了.
-     *
-     * @param warnDays 天数
-     */
-    public void setWarnDays(final int warnDays) {
-        this.warnDays = warnDays;
     }
 }
