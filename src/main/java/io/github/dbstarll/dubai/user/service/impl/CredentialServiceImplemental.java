@@ -96,8 +96,9 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
                 if (original == null || !original.getPassword().equals(credentials.getPassword())) {
                     // password changed
                     passwordValidator.validate(credentials.getPassword(), validate);
-                    // TODO 检查与最近保留的几次密码是否相同；private int remember = 3;
-                    // TODO 检查上一次修改密码的时间间隔；private int minDays = 0;
+                    if (original != null) {
+                        passwordValidator.validateHistory(credentials.getPassword(), original.getHistories(), validate);
+                    }
                 }
             }
         };

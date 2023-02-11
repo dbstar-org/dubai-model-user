@@ -1,9 +1,14 @@
 package io.github.dbstarll.dubai.user.utils;
 
 import io.github.dbstarll.dubai.model.service.validate.Validate;
+import io.github.dbstarll.dubai.user.entity.ext.PasswordHistory;
 import io.github.dbstarll.dubai.user.entity.ext.UsernamePasswordCredentials;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public class PasswordValidator {
@@ -91,9 +96,44 @@ public class PasswordValidator {
         }
     }
 
+    /**
+     * 参考历史密码来校验新密码是否合规.
+     *
+     * @param password  新密码
+     * @param histories 历史密码
+     * @param validate  validate
+     */
+    public void validateHistory(final String password, final List<PasswordHistory> histories, final Validate validate) {
+        validateHistory(password, histories, validate, UsernamePasswordCredentials.FIELD_PASSWORD);
+    }
+
+    /**
+     * 参考历史密码来校验新密码是否合规.
+     *
+     * @param password  新密码
+     * @param histories 历史密码
+     * @param validate  validate
+     * @param field     field
+     */
+    public void validateHistory(final String password, final List<PasswordHistory> histories, final Validate validate,
+                                final String field) {
+        if (histories != null && !histories.isEmpty()) {
+            if (properties.getRemember() > 0 && histories.stream().sorted().limit(properties.getRemember())
+                    .anyMatch(hp -> StringUtils.equals(hp.getPassword(), password))) {
+                validate.addFieldError(field, "新密码与最近" + properties.getRemember() + "次使用过的密码不能相同");
+            }
+            if (properties.getMinDays() > 0 && histories.stream().anyMatch(this::checkMinDays)) {
+                validate.addFieldError(field, "距离上一次修改密码的时间间隔不得小于" + properties.getMinDays() + "天");
+            }
+        }
+    }
+
+    private boolean checkMinDays(final PasswordHistory passwordHistory) {
+        final Instant now = new Date().toInstant();
+        return Duration.between(passwordHistory.getDate().toInstant(), now).toDays() < properties.getMinDays();
+    }
+
     // TODO 以下内容需要校验
-    // private int remember = 3;
-    // private int minDays = 0;
     // private int maxDays = 90;
     // private int warnDays = 7;
 

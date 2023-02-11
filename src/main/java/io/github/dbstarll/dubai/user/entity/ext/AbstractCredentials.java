@@ -14,7 +14,7 @@ abstract class AbstractCredentials implements CredentialDetails, Serializable {
     }
 
     protected AbstractCredentials(final Map<String, Object> map) {
-        this.map = map == null ? new HashMap<>() : new HashMap<>(map);
+        this.map = map == null ? new HashMap<>() : map;
     }
 
     @SuppressWarnings("unchecked")
