@@ -4,10 +4,10 @@ import io.github.dbstarll.dubai.model.entity.EntityFactory;
 import io.github.dbstarll.dubai.model.service.ServiceTestCase;
 import io.github.dbstarll.dubai.model.service.validate.DefaultValidate;
 import io.github.dbstarll.dubai.model.service.validate.Validate;
-import io.github.dbstarll.dubai.user.entity.AuthTypeEntity;
+import io.github.dbstarll.dubai.user.entity.TestAuthTypeEntity;
 import io.github.dbstarll.dubai.user.entity.enums.AuthType;
 import io.github.dbstarll.dubai.user.entity.join.AuthTypable;
-import io.github.dbstarll.dubai.user.service.AuthTypeService;
+import io.github.dbstarll.dubai.user.service.TestAuthTypeService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AuthTypeAttachTest extends ServiceTestCase {
-    private static final Class<AuthTypeEntity> entityClass = AuthTypeEntity.class;
-    private static final Class<AuthTypeService> serviceClass = AuthTypeService.class;
+    private static final Class<TestAuthTypeEntity> entityClass = TestAuthTypeEntity.class;
+    private static final Class<TestAuthTypeService> serviceClass = TestAuthTypeService.class;
 
     @BeforeAll
     static void beforeAll() {
@@ -50,7 +50,7 @@ class AuthTypeAttachTest extends ServiceTestCase {
     void countByAuthType() {
         useService(serviceClass, s -> {
             assertEquals(0, s.countByAuthType(AuthType.MiniProgram));
-            final AuthTypeEntity entity = EntityFactory.newInstance(entityClass);
+            final TestAuthTypeEntity entity = EntityFactory.newInstance(entityClass);
             entity.setSource(AuthType.MiniProgram);
             assertSame(entity, s.save(entity, null));
             assertEquals(1, s.countByAuthType(AuthType.MiniProgram));
@@ -61,7 +61,7 @@ class AuthTypeAttachTest extends ServiceTestCase {
     void findByAuthType() {
         useService(serviceClass, s -> {
             assertNull(s.findByAuthType(AuthType.MiniProgram).first());
-            final AuthTypeEntity entity = EntityFactory.newInstance(entityClass);
+            final TestAuthTypeEntity entity = EntityFactory.newInstance(entityClass);
             entity.setSource(AuthType.MiniProgram);
             assertSame(entity, s.save(entity, null));
             assertEquals(entity, s.findByAuthType(AuthType.MiniProgram).first());
@@ -72,7 +72,7 @@ class AuthTypeAttachTest extends ServiceTestCase {
     void deleteByAuthType() {
         useService(serviceClass, s -> {
             assertEquals(0, s.deleteByAuthType(AuthType.MiniProgram).getDeletedCount());
-            final AuthTypeEntity entity = EntityFactory.newInstance(entityClass);
+            final TestAuthTypeEntity entity = EntityFactory.newInstance(entityClass);
             entity.setSource(AuthType.MiniProgram);
             assertSame(entity, s.save(entity, null));
             assertEquals(1, s.deleteByAuthType(AuthType.MiniProgram).getDeletedCount());
@@ -83,7 +83,7 @@ class AuthTypeAttachTest extends ServiceTestCase {
     @Test
     void authTypeValidationNotSet() {
         useService(serviceClass, s -> {
-            final AuthTypeEntity entity = EntityFactory.newInstance(entityClass);
+            final TestAuthTypeEntity entity = EntityFactory.newInstance(entityClass);
             final Validate validate = new DefaultValidate();
             assertNull(s.save(entity, validate));
             assertTrue(validate.hasErrors());
@@ -96,7 +96,7 @@ class AuthTypeAttachTest extends ServiceTestCase {
     @Test
     void authTypeValidationChange() {
         useService(serviceClass, s -> {
-            final AuthTypeEntity entity = EntityFactory.newInstance(entityClass);
+            final TestAuthTypeEntity entity = EntityFactory.newInstance(entityClass);
             entity.setSource(AuthType.MiniProgram);
             assertSame(entity, s.save(entity, null));
 

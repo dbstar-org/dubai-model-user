@@ -4,5 +4,5 @@ import io.github.dbstarll.dubai.model.entity.Table;
 import io.github.dbstarll.dubai.user.entity.join.PrincipalBase;
 
 @Table
-public interface PrincipalEntity extends UserEntities, PrincipalBase {
+public interface TestPrincipalEntity extends UserEntities, PrincipalBase {
 }

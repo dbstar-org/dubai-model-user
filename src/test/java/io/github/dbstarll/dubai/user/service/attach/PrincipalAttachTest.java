@@ -6,12 +6,12 @@ import io.github.dbstarll.dubai.model.service.ServiceFactory;
 import io.github.dbstarll.dubai.model.service.ServiceTestCase;
 import io.github.dbstarll.dubai.model.service.validate.DefaultValidate;
 import io.github.dbstarll.dubai.model.service.validate.Validate;
-import io.github.dbstarll.dubai.user.entity.AuthTypeEntity;
-import io.github.dbstarll.dubai.user.entity.PrincipalEntity;
+import io.github.dbstarll.dubai.user.entity.TestAuthTypeEntity;
+import io.github.dbstarll.dubai.user.entity.TestPrincipalEntity;
 import io.github.dbstarll.dubai.user.entity.enums.AuthType;
 import io.github.dbstarll.dubai.user.entity.join.PrincipalBase;
-import io.github.dbstarll.dubai.user.service.AuthTypeService;
-import io.github.dbstarll.dubai.user.service.PrincipalService;
+import io.github.dbstarll.dubai.user.service.TestAuthTypeService;
+import io.github.dbstarll.dubai.user.service.TestPrincipalService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -29,8 +29,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PrincipalAttachTest extends ServiceTestCase {
-    private static final Class<PrincipalEntity> entityClass = PrincipalEntity.class;
-    private static final Class<PrincipalService> serviceClass = PrincipalService.class;
+    private static final Class<TestPrincipalEntity> entityClass = TestPrincipalEntity.class;
+    private static final Class<TestPrincipalService> serviceClass = TestPrincipalService.class;
 
     @BeforeAll
     static void beforeAll() {
@@ -59,7 +59,7 @@ class PrincipalAttachTest extends ServiceTestCase {
         final ObjectId principalId = new ObjectId();
         useService(serviceClass, s -> {
             assertEquals(0, s.countByPrincipalId(principalId));
-            final PrincipalEntity entity = EntityFactory.newInstance(entityClass);
+            final TestPrincipalEntity entity = EntityFactory.newInstance(entityClass);
             entity.setPrincipalId(principalId);
             assertSame(entity, s.save(entity, null));
             assertEquals(1, s.countByPrincipalId(principalId));
@@ -71,7 +71,7 @@ class PrincipalAttachTest extends ServiceTestCase {
         final ObjectId principalId = new ObjectId();
         useService(serviceClass, s -> {
             assertNull(s.findByPrincipalId(principalId).first());
-            final PrincipalEntity entity = EntityFactory.newInstance(entityClass);
+            final TestPrincipalEntity entity = EntityFactory.newInstance(entityClass);
             entity.setPrincipalId(principalId);
             assertSame(entity, s.save(entity, null));
             assertEquals(entity, s.findByPrincipalId(principalId).first());
@@ -83,7 +83,7 @@ class PrincipalAttachTest extends ServiceTestCase {
         final ObjectId principalId = new ObjectId();
         useService(serviceClass, s -> {
             assertEquals(0, s.deleteByPrincipalId(principalId).getDeletedCount());
-            final PrincipalEntity entity = EntityFactory.newInstance(entityClass);
+            final TestPrincipalEntity entity = EntityFactory.newInstance(entityClass);
             entity.setPrincipalId(principalId);
             assertSame(entity, s.save(entity, null));
             assertEquals(1, s.deleteByPrincipalId(principalId).getDeletedCount());
@@ -94,30 +94,30 @@ class PrincipalAttachTest extends ServiceTestCase {
     @Test
     void findWithPrincipal() {
         useCollectionFactory(cf -> {
-            final PrincipalService service = ServiceFactory.newInstance(serviceClass, cf.newInstance(entityClass));
-            final AuthTypeService principalService = ServiceFactory.newInstance(AuthTypeService.class,
-                    cf.newInstance(AuthTypeEntity.class));
+            final TestPrincipalService service = ServiceFactory.newInstance(serviceClass, cf.newInstance(entityClass));
+            final TestAuthTypeService principalService = ServiceFactory.newInstance(TestAuthTypeService.class,
+                    cf.newInstance(TestAuthTypeEntity.class));
 
             assertNull(service.findWithPrincipal(principalService, null).first());
 
-            final AuthTypeEntity principal = EntityFactory.newInstance(AuthTypeEntity.class);
+            final TestAuthTypeEntity principal = EntityFactory.newInstance(TestAuthTypeEntity.class);
             principal.setSource(AuthType.MiniProgram);
             assertNotNull(principalService.save(principal, null));
 
-            final PrincipalEntity entity = EntityFactory.newInstance(entityClass);
+            final TestPrincipalEntity entity = EntityFactory.newInstance(entityClass);
             entity.setPrincipalId(new ObjectId());
             assertSame(entity, service.save(entity, null));
 
-            final Entry<PrincipalEntity, AuthTypeEntity> match = service.findWithPrincipal(principalService, Filters.eq(entity.getId())).first();
+            final Entry<TestPrincipalEntity, TestAuthTypeEntity> match = service.findWithPrincipal(principalService, Filters.eq(entity.getId())).first();
             assertNotNull(match);
             assertEquals(entity, match.getKey());
             assertNull(match.getValue());
 
-            final PrincipalEntity entity2 = EntityFactory.newInstance(entityClass);
+            final TestPrincipalEntity entity2 = EntityFactory.newInstance(entityClass);
             entity2.setPrincipalId(principal.getId());
             assertSame(entity2, service.save(entity2, null));
 
-            final Entry<PrincipalEntity, AuthTypeEntity> match2 = service.findWithPrincipal(principalService, Filters.eq(entity2.getId())).first();
+            final Entry<TestPrincipalEntity, TestAuthTypeEntity> match2 = service.findWithPrincipal(principalService, Filters.eq(entity2.getId())).first();
             assertNotNull(match2);
             assertEquals(entity2, match2.getKey());
             assertEquals(principal, match2.getValue());
@@ -128,7 +128,7 @@ class PrincipalAttachTest extends ServiceTestCase {
     @Test
     void principalIdValidationNotSet() {
         useService(serviceClass, s -> {
-            final PrincipalEntity entity = EntityFactory.newInstance(entityClass);
+            final TestPrincipalEntity entity = EntityFactory.newInstance(entityClass);
             final Validate validate = new DefaultValidate();
             assertNull(s.save(entity, validate));
             assertTrue(validate.hasErrors());
@@ -141,7 +141,7 @@ class PrincipalAttachTest extends ServiceTestCase {
     @Test
     void principalIdValidationChange() {
         useService(serviceClass, s -> {
-            final PrincipalEntity entity = EntityFactory.newInstance(entityClass);
+            final TestPrincipalEntity entity = EntityFactory.newInstance(entityClass);
             entity.setPrincipalId(new ObjectId());
             assertSame(entity, s.save(entity, null));
 
