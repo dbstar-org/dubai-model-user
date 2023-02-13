@@ -124,7 +124,6 @@ class PrincipalAttachTest extends ServiceTestCase {
         });
     }
 
-
     @Test
     void principalIdValidationNotSet() {
         useService(serviceClass, s -> {

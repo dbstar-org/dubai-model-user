@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.Validate.noNullElements;
 import static org.apache.commons.lang3.Validate.notBlank;
 
 public final class UsernamePasswordCredentials extends AbstractCredentials {
@@ -26,12 +25,9 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
     public static final String FIELD_HISTORIES = "histories";
     public static final int MAX_HISTORIES = 5;
 
-    UsernamePasswordCredentials(final String username, final String password, final List<PasswordHistory> histories) {
+    UsernamePasswordCredentials(final String username, final String password) {
         put(FIELD_USERNAME, notBlank(username, FIELD_USERNAME + " is blank"));
         setPassword(password);
-        if (histories != null) {
-            put(FIELD_HISTORIES, noNullElements(histories, "histories contains null element at index: %d"));
-        }
     }
 
     UsernamePasswordCredentials(final Map<String, Object> map) {

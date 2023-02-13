@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 class CredentialsTest {
     @Test
     void usernamePassword() {
-        final Credential credential = Credentials.usernamePassword("username", "password", null);
+        final Credential credential = Credentials.usernamePassword("username", "password");
         assertSame(AuthType.UsernamePassword, credential.getSource());
         final UsernamePasswordCredentials credentials = assertInstanceOf(UsernamePasswordCredentials.class,
                 Credentials.credentials(credential));

@@ -8,6 +8,9 @@ import io.github.dbstarll.dubai.model.entity.Entity;
 import io.github.dbstarll.dubai.model.service.Aggregator;
 import io.github.dbstarll.dubai.model.service.Service;
 import io.github.dbstarll.dubai.model.service.impl.CoreImplementals;
+import io.github.dbstarll.dubai.model.service.validate.Validate;
+import io.github.dbstarll.dubai.model.service.validation.GeneralValidation;
+import io.github.dbstarll.dubai.model.service.validation.Validation;
 import io.github.dbstarll.dubai.user.entity.Credential;
 import io.github.dbstarll.dubai.user.entity.join.CredentialBase;
 import io.github.dbstarll.dubai.user.service.CredentialService;
@@ -77,5 +80,26 @@ public final class CredentialAttachImplemental<E extends Entity & CredentialBase
                 .build()
                 .aggregateOne(DEFAULT_CONTEXT)
                 .map(e -> EntryWrapper.wrap(e.getKey(), (Credential) e.getValue().get(Credential.class)));
+    }
+
+    /**
+     * 认证凭据ID校验.
+     *
+     * @return finalCredentialIdValidation
+     */
+    @GeneralValidation
+    public Validation<E> finalCredentialIdValidation() {
+        return new AbstractEntityValidation() {
+            @Override
+            public void validate(final E entity, final E original, final Validate validate) {
+                if (entity.getCredentialId() == null) {
+                    validate.addFieldError(CredentialBase.FIELD_NAME_CREDENTIAL_ID, "认证凭据未设置");
+                } else if (original != null && !entity.getCredentialId().equals(original.getCredentialId())) {
+                    validate.addFieldError(CredentialBase.FIELD_NAME_CREDENTIAL_ID, "认证凭据不可更改");
+                } else if (!credentialService.contains(entity.getCredentialId())) {
+                    validate.addFieldError(CredentialBase.FIELD_NAME_CREDENTIAL_ID, "认证凭据不存在");
+                }
+            }
+        };
     }
 }
