@@ -4,7 +4,7 @@
 
   <parent>
     <groupId>io.github.dbstarll.dubai</groupId>
-    <artifactId>dubai-module</artifactId>
+    <artifactId>dubai-model</artifactId>
     <version>1.1.1-SNAPSHOT</version>
   </parent>
   <artifactId>dubai-module-user</artifactId>
@@ -22,66 +22,65 @@
 
   <properties>
     <project.git.project>dubai-module-user</project.git.project>
-    <version.dubai-model>1.1.1-SNAPSHOT</version.dubai-model>
-    <version.de.flapdoodle.embed.mongo>4.4.0</version.de.flapdoodle.embed.mongo>
-    <version.log4j2>2.19.0</version.log4j2>
+    <version.dubai-model>${project.parent.version}</version.dubai-model>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>io.github.dbstarll.dubai</groupId>
-      <artifactId>dubai-model-collection</artifactId>
-      <version>${version.dubai-model}</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.github.dbstarll.dubai</groupId>
       <artifactId>dubai-model-service</artifactId>
       <version>${version.dubai-model}</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>de.flapdoodle.embed</groupId>
-      <artifactId>de.flapdoodle.embed.mongo</artifactId>
-      <version>${version.de.flapdoodle.embed.mongo}</version>
-      <scope>test</scope>
     </dependency>
     <!-- Spring -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-autoconfigure</artifactId>
-      <version>${version.spring-boot}</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <version>${version.spring-boot}</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.logging.log4j</groupId>
-          <artifactId>log4j-to-slf4j</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-slf4j2-impl</artifactId>
-      <version>${version.log4j2}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>${version.log4j2}</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 
   <profiles>
+    <profile>
+      <id>java-test</id>
+      <activation>
+        <file>
+          <exists>src/test/java</exists>
+        </file>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>io.github.dbstarll.dubai</groupId>
+          <artifactId>dubai-model-collection</artifactId>
+          <version>${version.dubai-model}</version>
+          <classifier>tests</classifier>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>io.github.dbstarll.dubai</groupId>
+          <artifactId>dubai-model-service</artifactId>
+          <version>${version.dubai-model}</version>
+          <classifier>tests</classifier>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-surefire-plugin</artifactId>
+              <dependencies>
+                <dependency>
+                  <groupId>org.apache.maven.surefire</groupId>
+                  <artifactId>surefire-junit-platform</artifactId>
+                  <version>${version.maven-surefire-plugin}</version>
+                </dependency>
+              </dependencies>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
     <profile>
       <id>site-local</id>
       <distributionManagement>
