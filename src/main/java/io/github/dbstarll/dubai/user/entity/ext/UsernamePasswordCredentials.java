@@ -26,7 +26,7 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
     public static final int MAX_HISTORIES = 5;
 
     UsernamePasswordCredentials(final String username, final String password) {
-        put(FIELD_USERNAME, notBlank(username, FIELD_USERNAME + " is blank"));
+        setUsername(username);
         setPassword(password);
     }
 
@@ -41,6 +41,15 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
      */
     public String getUsername() {
         return get(FIELD_USERNAME);
+    }
+
+    /**
+     * 设置新用户名.
+     *
+     * @param username 新用户名
+     */
+    public void setUsername(final String username) {
+        put(FIELD_USERNAME, notBlank(username, FIELD_USERNAME + " is blank"));
     }
 
     /**

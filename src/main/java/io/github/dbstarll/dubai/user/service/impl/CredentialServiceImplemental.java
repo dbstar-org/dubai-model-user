@@ -127,7 +127,8 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
                         filters.add(Filters.ne(Entity.FIELD_NAME_ID, original.getId()));
                     }
                     if (service.count(Filters.and(filters)) > 0) {
-                        validate.addFieldError(CredentialDetails.FIELD_CREDENTIALS, "凭据不唯一");
+                        validate.addFieldError(CredentialDetails.FIELD_CREDENTIALS,
+                                "凭据[" + entity.getSource() + "]不唯一");
                     }
                 }
             }
