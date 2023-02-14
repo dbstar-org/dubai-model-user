@@ -84,7 +84,7 @@ public final class ApiKeyCredentials extends AbstractCredentials {
                 validate.addFieldError(FIELD_CREDENTIALS, "凭据[" + FIELD_KEY + "]不能修改");
             }
         } else if (original != null) {
-            throw new UnsupportedOperationException("original not instanceof ApiKeyCredentials");
+            validate.addActionError("original not instanceof ApiKeyCredentials");
         }
     }
 
