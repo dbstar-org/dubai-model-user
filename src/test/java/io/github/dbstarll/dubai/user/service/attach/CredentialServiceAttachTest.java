@@ -157,7 +157,9 @@ class CredentialServiceAttachTest extends ServiceTestCase {
 
             // same username and password
             final Credential loaded2 = s.findById(credential.getId());
-//            assertEquals(loaded, loaded2);
+            final UsernamePasswordCredentials details2 = assertInstanceOf(UsernamePasswordCredentials.class,
+                    Credentials.credentials(loaded2));
+            assertEquals(details, details2);
             loaded2.setDisabled(true);
             assertSame(loaded2, s.save(loaded2, validate));
             assertFalse(validate.hasErrors());

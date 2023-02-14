@@ -5,7 +5,6 @@ import io.github.dbstarll.dubai.model.service.validate.Validate;
 import io.github.dbstarll.dubai.user.entity.enums.AuthType;
 import io.github.dbstarll.dubai.user.entity.join.AuthTypable;
 import org.apache.commons.lang3.StringUtils;
-import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.Date;
@@ -21,7 +20,6 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
 
     public static final String FIELD_USERNAME = "username";
     public static final String FIELD_PASSWORD = "password";
-    public static final String FIELD_DATE = "date";
     public static final String FIELD_HISTORIES = "histories";
     public static final int MAX_HISTORIES = 5;
 
@@ -77,7 +75,7 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
      */
     public List<PasswordHistory> getHistories() {
         final List<Object> list = get(FIELD_HISTORIES);
-        return list == null ? null : list.stream().map(this::parsePasswordHistory).collect(Collectors.toList());
+        return list == null ? null : list.stream().map(PasswordHistory::parse).collect(Collectors.toList());
     }
 
     @Override
@@ -106,17 +104,6 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
             }
         } else if (original != null) {
             throw new UnsupportedOperationException("original not instanceof UsernamePasswordCredentials");
-        }
-    }
-
-    private PasswordHistory parsePasswordHistory(final Object history) {
-        if (history instanceof PasswordHistory) {
-            return (PasswordHistory) history;
-        } else if (history instanceof Document) {
-            final Document doc = (Document) history;
-            return new PasswordHistory(doc.getString(FIELD_PASSWORD), doc.getDate(FIELD_DATE));
-        } else {
-            throw new UnsupportedOperationException(history.toString());
         }
     }
 
