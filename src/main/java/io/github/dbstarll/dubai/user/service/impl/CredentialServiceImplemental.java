@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.collections.MapUtils.isEmpty;
 import static org.apache.commons.lang3.Validate.notNull;
 
 public final class CredentialServiceImplemental extends UserImplementals<Credential, CredentialService>
@@ -76,7 +77,7 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
         return new AbstractEntityValidation() {
             @Override
             public void validate(final Credential entity, final Credential original, final Validate validate) {
-                if (entity.getCredentials() == null || entity.getCredentials().isEmpty()) {
+                if (isEmpty(entity.getCredentials())) {
                     validate.addFieldError(CredentialDetails.FIELD_CREDENTIALS, "凭据未设置");
                 } else {
                     final CredentialDetails details = Credentials.credentials(entity);
@@ -94,14 +95,15 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
             private void validateUsernamePassword(final UsernamePasswordCredentials credentials,
                                                   final UsernamePasswordCredentials original,
                                                   final Validate validate) {
-                if (original == null || !original.getUsername().equals(credentials.getUsername())) {
-                    // username changed
+                if (original == null) {
                     usernameValidator.validate(credentials.getUsername(), validate);
-                }
-                if (original == null || !original.getPassword().equals(credentials.getPassword())) {
-                    // password changed
                     passwordValidator.validate(credentials.getPassword(), validate);
-                    if (original != null) {
+                } else {
+                    if (!original.getUsername().equals(credentials.getUsername())) {
+                        usernameValidator.validate(credentials.getUsername(), validate);
+                    }
+                    if (!original.getPassword().equals(credentials.getPassword())) {
+                        passwordValidator.validate(credentials.getPassword(), validate);
                         passwordValidator.validateHistory(credentials.getPassword(), original.getHistories(), validate);
                     }
                 }
@@ -120,11 +122,10 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
             @Override
             public void validate(final Credential entity, final Credential original, final Validate validate) {
                 if (!validate.hasErrors()) {
-                    if (original == null) {
-                        if (service.count(Filters.and(service.filterByPrincipalId(entity.getPrincipalId()),
-                                service.filterByAuthType(entity.getSource()))) > 0) {
-                            validate.addActionError("同一认证类型下的主体必须唯一");
-                        }
+                    if (original == null && service.count(Filters.and(
+                            service.filterByPrincipalId(entity.getPrincipalId()),
+                            service.filterByAuthType(entity.getSource()))) > 0) {
+                        validate.addActionError("同一认证类型下的主体必须唯一");
                     }
                     final List<Bson> filters = new ArrayList<>();
                     filters.add(Credentials.credentials(entity).distinctFilter());
