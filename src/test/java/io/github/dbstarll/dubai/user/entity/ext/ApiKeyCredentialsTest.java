@@ -48,7 +48,7 @@ class ApiKeyCredentialsTest {
         assertTrue(validate.hasErrors());
         assertFalse(validate.hasActionErrors());
         assertTrue(validate.hasFieldErrors());
-        assertEquals(Arrays.asList("appId未设置", "key未设置", "secret未设置"), validate.getFieldErrors().get(ApiKeyCredentials.FIELD_CREDENTIALS));
+        assertEquals(Arrays.asList("appId未设置", "key未设置", "secret未设置"), validate.getFieldErrors().get(CredentialDetails.FIELD_CREDENTIALS));
     }
 
     @Test
@@ -70,7 +70,7 @@ class ApiKeyCredentialsTest {
         assertTrue(validate.hasErrors());
         assertFalse(validate.hasActionErrors());
         assertTrue(validate.hasFieldErrors());
-        assertEquals(Arrays.asList("凭据[appId]不能修改", "凭据[key]不能修改"), validate.getFieldErrors().get(ApiKeyCredentials.FIELD_CREDENTIALS));
+        assertEquals(Arrays.asList("凭据[appId]不能修改", "凭据[key]不能修改"), validate.getFieldErrors().get(CredentialDetails.FIELD_CREDENTIALS));
     }
 
     @Test

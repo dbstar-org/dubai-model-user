@@ -40,13 +40,13 @@ public final class Credentials {
      * 基于微信小程序的凭证.
      *
      * @param appId  appId
-     * @param openid openid
+     * @param openId openId
      * @return MiniProgramCredentials
      */
-    public static Credential miniProgram(final String appId, final String openid) {
+    public static Credential miniProgram(final String appId, final String openId) {
         final Credential credential = EntityFactory.newInstance(Credential.class);
         credential.setSource(MiniProgram);
-        return new MiniProgramCredentials(appId, openid).apply(credential);
+        return new MiniProgramCredentials(appId, openId).apply(credential);
     }
 
     /**

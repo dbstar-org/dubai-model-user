@@ -30,7 +30,7 @@ class CredentialsTest {
         final MiniProgramCredentials credentials = assertInstanceOf(MiniProgramCredentials.class,
                 Credentials.credentials(credential));
         assertEquals("appId", credentials.getAppId());
-        assertEquals("openId", credentials.getOpenid());
+        assertEquals("openId", credentials.getOpenId());
     }
 
     @Test

@@ -85,7 +85,7 @@ class CredentialAttachTest extends ServiceTestCase {
                 }
             }
         }, cs -> {
-            final Credential credential = Credentials.miniProgram("appId", "openid");
+            final Credential credential = Credentials.miniProgram("appId", "openId");
             credential.setPrincipalId(new ObjectId());
             assertSame(credential, cs.save(credential, null));
 
