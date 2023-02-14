@@ -12,6 +12,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ApiKeyCredentialsTest {
@@ -23,6 +24,8 @@ class ApiKeyCredentialsTest {
         assertEquals("appId", credentials.getAppId());
         assertEquals("key", credentials.getKey());
         assertEquals("secret", credentials.getSecret());
+
+        assertEquals("ApiKeyCredentials[map=3]", credentials.toString());
     }
 
     @Test
@@ -94,5 +97,37 @@ class ApiKeyCredentialsTest {
         final Credential credential = Credentials.apiKey("appId", "key", "secret");
         final ApiKeyCredentials credentials = assertInstanceOf(ApiKeyCredentials.class, Credentials.credentials(credential));
         assertEquals("And Filter{filters=[Filter{fieldName='source', value=ApiKey}, Filter{fieldName='credentials.appId', value=appId}, Filter{fieldName='credentials.key', value=key}]}", credentials.distinctFilter().toString());
+    }
+
+    @Test
+    void testHashCode() {
+        final Credential c1 = Credentials.apiKey("appId", "key", "secret");
+        final ApiKeyCredentials d1 = assertInstanceOf(ApiKeyCredentials.class, Credentials.credentials(c1));
+        final Credential c2 = Credentials.apiKey("appId", "key", "secret");
+        final ApiKeyCredentials d2 = assertInstanceOf(ApiKeyCredentials.class, Credentials.credentials(c2));
+        final Credential c3 = Credentials.apiKey("appId", "key", "secret1");
+        final ApiKeyCredentials d3 = assertInstanceOf(ApiKeyCredentials.class, Credentials.credentials(c3));
+        assertEquals(d1.hashCode(), d2.hashCode());
+        assertEquals(c1.hashCode(), c2.hashCode());
+        assertNotEquals(d1.hashCode(), d3.hashCode());
+        assertNotEquals(c1.hashCode(), c3.hashCode());
+    }
+
+    @Test
+    void testEquals() {
+        final Credential c1 = Credentials.apiKey("appId", "key", "secret");
+        final ApiKeyCredentials d1 = assertInstanceOf(ApiKeyCredentials.class, Credentials.credentials(c1));
+        final Credential c2 = Credentials.apiKey("appId", "key", "secret");
+        final ApiKeyCredentials d2 = assertInstanceOf(ApiKeyCredentials.class, Credentials.credentials(c2));
+        final Credential c3 = Credentials.apiKey("appId", "key", "secret1");
+        final ApiKeyCredentials d3 = assertInstanceOf(ApiKeyCredentials.class, Credentials.credentials(c3));
+        assertEquals(d1, d2);
+        assertEquals(c1, c2);
+        assertNotEquals(d1, d3);
+        assertNotEquals(c1, c3);
+
+        assertTrue(d1.equals(d1));
+        assertNotEquals(d1, null);
+        assertNotEquals(d1, "null");
     }
 }

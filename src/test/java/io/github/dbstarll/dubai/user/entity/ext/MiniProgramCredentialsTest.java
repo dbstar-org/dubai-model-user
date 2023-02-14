@@ -22,6 +22,8 @@ class MiniProgramCredentialsTest {
         final MiniProgramCredentials credentials = assertInstanceOf(MiniProgramCredentials.class, Credentials.credentials(credential));
         assertEquals("appId", credentials.getAppId());
         assertEquals("openId", credentials.getOpenId());
+
+        assertEquals("MiniProgramCredentials[map=2]", credentials.toString());
     }
 
     @Test
