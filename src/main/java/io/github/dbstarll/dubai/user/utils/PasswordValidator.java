@@ -128,6 +128,15 @@ public class PasswordValidator {
         }
     }
 
+    /**
+     * 获得保留密码历史的最大记录数量.
+     *
+     * @return 保留密码历史的最大记录数量
+     */
+    public int getMaxPasswordHistory() {
+        return Math.max(properties.getRemember(), UsernamePasswordCredentials.MAX_HISTORIES);
+    }
+
     private boolean checkMinDays(final PasswordHistory passwordHistory) {
         final Instant now = new Date().toInstant();
         return Duration.between(passwordHistory.getDate().toInstant(), now).toDays() < properties.getMinDays();

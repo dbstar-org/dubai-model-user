@@ -30,7 +30,7 @@ public final class PasswordHistory implements Comparable<PasswordHistory>, Seria
         this.date = notNull(date, "date is null");
     }
 
-    PasswordHistory(final Document document) {
+    private PasswordHistory(final Document document) {
         this(notNull(document, "document is null").getString(FIELD_PASSWORD), document.getDate(FIELD_DATE));
     }
 

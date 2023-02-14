@@ -24,6 +24,7 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -41,6 +42,11 @@ class CredentialAttachTest extends ServiceTestCase {
     private static final Class<TestCredentialEntity> entityClass = TestCredentialEntity.class;
     private static final Class<TestCredentialService> serviceClass = TestCredentialService.class;
 
+    private UsernameProperties usernameProperties;
+    private UsernameValidator usernameValidator;
+    private PasswordProperties passwordProperties;
+    private PasswordValidator passwordValidator;
+
     @BeforeAll
     static void beforeAll() {
         globalCollectionFactory();
@@ -51,9 +57,21 @@ class CredentialAttachTest extends ServiceTestCase {
         cleanupGlobal();
     }
 
+    @BeforeEach
+    void setUp() {
+        usernameProperties = new UsernameProperties();
+        usernameValidator = new UsernameValidator(usernameProperties);
+        passwordProperties = new PasswordProperties();
+        passwordValidator = new PasswordValidator(passwordProperties);
+    }
+
     @AfterEach
     void tearDown() {
         cleanupTest();
+        passwordValidator = null;
+        passwordProperties = null;
+        usernameValidator = null;
+        usernameProperties = null;
     }
 
 
@@ -62,8 +80,8 @@ class CredentialAttachTest extends ServiceTestCase {
             @Override
             public <I extends Implemental> void autowire(I i) throws AutowireException {
                 if (i instanceof CredentialServiceImplemental) {
-                    ((CredentialServiceImplemental) i).setUsernameValidator(new UsernameValidator(new UsernameProperties()));
-                    ((CredentialServiceImplemental) i).setPasswordValidator(new PasswordValidator(new PasswordProperties()));
+                    ((CredentialServiceImplemental) i).setUsernameValidator(usernameValidator);
+                    ((CredentialServiceImplemental) i).setPasswordValidator(passwordValidator);
                 }
             }
         }, cs -> {

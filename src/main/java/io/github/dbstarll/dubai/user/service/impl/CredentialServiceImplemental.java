@@ -10,15 +10,20 @@ import io.github.dbstarll.dubai.model.service.validation.Validation;
 import io.github.dbstarll.dubai.user.entity.Credential;
 import io.github.dbstarll.dubai.user.entity.ext.CredentialDetails;
 import io.github.dbstarll.dubai.user.entity.ext.Credentials;
+import io.github.dbstarll.dubai.user.entity.ext.PasswordHistory;
 import io.github.dbstarll.dubai.user.entity.ext.UsernamePasswordCredentials;
 import io.github.dbstarll.dubai.user.service.CredentialService;
 import io.github.dbstarll.dubai.user.service.attach.CredentialServiceAttach;
 import io.github.dbstarll.dubai.user.utils.PasswordValidator;
 import io.github.dbstarll.dubai.user.utils.UsernameValidator;
+import org.apache.commons.lang3.StringUtils;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -148,10 +153,29 @@ public final class CredentialServiceImplemental extends UserImplementals<Credent
                 if (!validate.hasErrors()) {
                     final CredentialDetails details = Credentials.credentials(entity);
                     if (details instanceof UsernamePasswordCredentials) {
-                        final CredentialDetails originalDetails = Credentials.credentials(original);
-                        // TODO copy history and append
+                        appendPasswordHistory(
+                                (UsernamePasswordCredentials) details,
+                                (UsernamePasswordCredentials) Credentials.credentials(original));
                     }
                 }
+            }
+
+            private void appendPasswordHistory(final UsernamePasswordCredentials credentials,
+                                               final UsernamePasswordCredentials original) {
+                final List<PasswordHistory> histories;
+                if (original != null && StringUtils.equals(original.getPassword(), credentials.getPassword())) {
+                    // password exist and not change
+                    histories = Optional.ofNullable(original.getHistories()).orElseGet(ArrayList::new);
+                } else {
+                    // create new PasswordHistory
+                    histories = new ArrayList<>();
+                    histories.add(new PasswordHistory(credentials.getPassword(), new Date()));
+                    if (original != null) {
+                        histories.addAll(Optional.ofNullable(original.getHistories()).orElseGet(ArrayList::new));
+                    }
+                }
+                credentials.setHistories(histories.stream().sorted().limit(passwordValidator.getMaxPasswordHistory())
+                        .collect(Collectors.toList()));
             }
         };
     }

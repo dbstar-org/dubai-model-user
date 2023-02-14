@@ -20,6 +20,7 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -28,14 +29,19 @@ import java.util.function.Consumer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class CredentialServiceAttachTest extends ServiceTestCase {
-    private static final Class<Credential> entityClass = Credential.class;
     private static final Class<CredentialService> serviceClass = CredentialService.class;
+
+    private UsernameProperties usernameProperties;
+    private UsernameValidator usernameValidator;
+    private PasswordProperties passwordProperties;
+    private PasswordValidator passwordValidator;
 
     @BeforeAll
     static void beforeAll() {
@@ -47,9 +53,21 @@ class CredentialServiceAttachTest extends ServiceTestCase {
         cleanupGlobal();
     }
 
+    @BeforeEach
+    void setUp() {
+        usernameProperties = new UsernameProperties();
+        usernameValidator = new UsernameValidator(usernameProperties);
+        passwordProperties = new PasswordProperties();
+        passwordValidator = new PasswordValidator(passwordProperties);
+    }
+
     @AfterEach
     void tearDown() {
         cleanupTest();
+        passwordValidator = null;
+        passwordProperties = null;
+        usernameValidator = null;
+        usernameProperties = null;
     }
 
     private void useService(final Consumer<CredentialService> consumer) {
@@ -57,8 +75,8 @@ class CredentialServiceAttachTest extends ServiceTestCase {
             @Override
             public <I extends Implemental> void autowire(I i) throws AutowireException {
                 if (i instanceof CredentialServiceImplemental) {
-                    ((CredentialServiceImplemental) i).setUsernameValidator(new UsernameValidator(new UsernameProperties()));
-                    ((CredentialServiceImplemental) i).setPasswordValidator(new PasswordValidator(new PasswordProperties()));
+                    ((CredentialServiceImplemental) i).setUsernameValidator(usernameValidator);
+                    ((CredentialServiceImplemental) i).setPasswordValidator(passwordValidator);
                 }
             }
         }, consumer);
@@ -139,36 +157,49 @@ class CredentialServiceAttachTest extends ServiceTestCase {
     @Test
     void passwordHistoryAppender() {
         useService(s -> {
-            final Credential credential = Credentials.usernamePassword("username", "PassWord0");
-            credential.setPrincipalId(new ObjectId());
             final Validate validate = new DefaultValidate();
-            assertSame(credential, s.save(credential, validate));
-            assertFalse(validate.hasErrors());
+            final Credential credential = Credentials.usernamePassword("username", "PassWord0");
+            {
+                credential.setPrincipalId(new ObjectId());
+                assertSame(credential, s.save(credential, validate));
+                assertFalse(validate.hasErrors());
+                final UsernamePasswordCredentials details = assertInstanceOf(UsernamePasswordCredentials.class,
+                        Credentials.credentials(credential));
+                assertNotNull(details.getHistories());
+                assertEquals(1, details.getHistories().size());
+                assertEquals("PassWord0", details.getHistories().get(0).getPassword());
+            }
 
             // change username and password
             final Credential loaded = s.findById(credential.getId());
-            assertEquals(credential, loaded);
-            final UsernamePasswordCredentials details = assertInstanceOf(UsernamePasswordCredentials.class,
-                    Credentials.credentials(loaded));
-            details.setUsername("username1");
-            details.setPassword("PassWord1");
-            assertSame(loaded, s.save(loaded, validate));
-            assertFalse(validate.hasErrors());
+            {
+                assertEquals(credential, loaded);
+                final UsernamePasswordCredentials details = assertInstanceOf(UsernamePasswordCredentials.class,
+                        Credentials.credentials(loaded));
+                details.setUsername("username1");
+                details.setPassword("PassWord1");
+                assertSame(loaded, s.save(loaded, validate));
+                assertFalse(validate.hasErrors());
+                assertNotNull(details.getHistories());
+                assertEquals(2, details.getHistories().size());
+                assertEquals("PassWord1", details.getHistories().get(0).getPassword());
+                assertEquals("PassWord0", details.getHistories().get(1).getPassword());
+            }
 
             // same username and password
             final Credential loaded2 = s.findById(credential.getId());
-            final UsernamePasswordCredentials details2 = assertInstanceOf(UsernamePasswordCredentials.class,
-                    Credentials.credentials(loaded2));
-            assertEquals(details, details2);
-            loaded2.setDisabled(true);
-            assertSame(loaded2, s.save(loaded2, validate));
-            assertFalse(validate.hasErrors());
-
-//            assertTrue(validate.hasErrors());
-//            assertFalse(validate.hasActionErrors());
-//            assertTrue(validate.hasFieldErrors());
-//            assertEquals(Collections.singletonList("凭据[UsernamePassword]不唯一"), validate.getFieldErrors()
-//                    .get(CredentialDetails.FIELD_CREDENTIALS));
+            {
+                assertEquals(loaded, loaded2);
+                final UsernamePasswordCredentials details = assertInstanceOf(UsernamePasswordCredentials.class,
+                        Credentials.credentials(loaded2));
+                loaded2.setDisabled(true);
+                assertSame(loaded2, s.save(loaded2, validate));
+                assertFalse(validate.hasErrors());
+                assertNotNull(details.getHistories());
+                assertEquals(2, details.getHistories().size());
+                assertEquals("PassWord1", details.getHistories().get(0).getPassword());
+                assertEquals("PassWord0", details.getHistories().get(1).getPassword());
+            }
         });
     }
 }
