@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 abstract class AbstractCredentials implements CredentialDetails, Serializable {
+    protected static final String DEFAULT_NOT_EMPTY_EX_MESSAGE = "%s is blank";
+
     private final Map<String, Object> map;
 
     protected AbstractCredentials() {

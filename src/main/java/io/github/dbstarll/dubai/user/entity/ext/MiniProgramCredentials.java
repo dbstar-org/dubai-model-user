@@ -18,8 +18,8 @@ public final class MiniProgramCredentials extends AbstractCredentials {
     public static final String FIELD_OPEN_ID = "openId";
 
     MiniProgramCredentials(final String appId, final String openId) {
-        put(FIELD_APP_ID, notBlank(appId, FIELD_APP_ID + " is blank"));
-        put(FIELD_OPEN_ID, notBlank(openId, FIELD_OPEN_ID + " is blank"));
+        put(FIELD_APP_ID, notBlank(appId, DEFAULT_NOT_EMPTY_EX_MESSAGE, FIELD_APP_ID));
+        put(FIELD_OPEN_ID, notBlank(openId, DEFAULT_NOT_EMPTY_EX_MESSAGE, FIELD_OPEN_ID));
     }
 
     MiniProgramCredentials(final Map<String, Object> map) {

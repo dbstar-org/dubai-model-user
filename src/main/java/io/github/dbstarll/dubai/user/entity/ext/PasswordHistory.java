@@ -26,8 +26,8 @@ public final class PasswordHistory implements Comparable<PasswordHistory>, Seria
      * @param date     设置时间
      */
     public PasswordHistory(final String password, final Date date) {
-        this.password = notBlank(password, "password is blank");
-        this.date = notNull(date, "date is null");
+        this.password = notBlank(password, "%s is blank", FIELD_PASSWORD);
+        this.date = notNull(date, "%s is null", FIELD_DATE);
     }
 
     private PasswordHistory(final Document document) {

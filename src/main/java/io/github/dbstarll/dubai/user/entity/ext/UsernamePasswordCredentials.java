@@ -46,7 +46,7 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
      * @param username 新用户名
      */
     public void setUsername(final String username) {
-        put(FIELD_USERNAME, notBlank(username, FIELD_USERNAME + " is blank"));
+        put(FIELD_USERNAME, notBlank(username, DEFAULT_NOT_EMPTY_EX_MESSAGE, FIELD_USERNAME));
     }
 
     /**
@@ -64,7 +64,7 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
      * @param password 新密码
      */
     public void setPassword(final String password) {
-        put(FIELD_PASSWORD, notBlank(password, FIELD_PASSWORD + " is blank"));
+        put(FIELD_PASSWORD, notBlank(password, DEFAULT_NOT_EMPTY_EX_MESSAGE, FIELD_PASSWORD));
     }
 
     /**

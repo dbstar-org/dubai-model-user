@@ -19,8 +19,8 @@ public final class ApiKeyCredentials extends AbstractCredentials {
     public static final String FIELD_SECRET = "secret";
 
     ApiKeyCredentials(final String appId, final String key, final String secret) {
-        put(FIELD_APP_ID, notBlank(appId, FIELD_APP_ID + " is blank"));
-        put(FIELD_KEY, notBlank(key, FIELD_KEY + " is blank"));
+        put(FIELD_APP_ID, notBlank(appId, DEFAULT_NOT_EMPTY_EX_MESSAGE, FIELD_APP_ID));
+        put(FIELD_KEY, notBlank(key, DEFAULT_NOT_EMPTY_EX_MESSAGE, FIELD_KEY));
         setSecret(secret);
     }
 
@@ -61,7 +61,7 @@ public final class ApiKeyCredentials extends AbstractCredentials {
      * @param secret 新的Secret
      */
     public void setSecret(final String secret) {
-        put(FIELD_SECRET, notBlank(secret, FIELD_SECRET + " is blank"));
+        put(FIELD_SECRET, notBlank(secret, DEFAULT_NOT_EMPTY_EX_MESSAGE, FIELD_SECRET));
     }
 
     @Override
