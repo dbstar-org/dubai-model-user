@@ -126,7 +126,7 @@ class ApiKeyCredentialsTest {
         assertNotEquals(d1, d3);
         assertNotEquals(c1, c3);
 
-        assertTrue(d1.equals(d1));
+        assertEquals(d1, d1);
         assertNotEquals(d1, null);
         assertNotEquals(d1, "null");
     }
