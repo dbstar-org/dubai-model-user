@@ -13,8 +13,6 @@ import io.github.dbstarll.dubai.user.entity.join.PrincipalBase;
 import io.github.dbstarll.dubai.user.service.TestAuthTypeService;
 import io.github.dbstarll.dubai.user.service.TestPrincipalService;
 import org.bson.types.ObjectId;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -35,16 +33,6 @@ class PrincipalAttachTest extends ServiceTestCase {
     @BeforeAll
     static void beforeAll() {
         globalCollectionFactory();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        cleanupGlobal();
-    }
-
-    @AfterEach
-    void tearDown() {
-        cleanupTest();
     }
 
     @Test

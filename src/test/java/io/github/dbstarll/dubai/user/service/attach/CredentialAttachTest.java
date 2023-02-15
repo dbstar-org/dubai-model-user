@@ -21,7 +21,6 @@ import io.github.dbstarll.dubai.user.utils.PasswordValidator;
 import io.github.dbstarll.dubai.user.utils.UsernameProperties;
 import io.github.dbstarll.dubai.user.utils.UsernameValidator;
 import org.bson.types.ObjectId;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +30,7 @@ import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -52,11 +51,6 @@ class CredentialAttachTest extends ServiceTestCase {
         globalCollectionFactory();
     }
 
-    @AfterAll
-    static void afterAll() {
-        cleanupGlobal();
-    }
-
     @BeforeEach
     void setUp() {
         usernameProperties = new UsernameProperties();
@@ -67,13 +61,11 @@ class CredentialAttachTest extends ServiceTestCase {
 
     @AfterEach
     void tearDown() {
-        cleanupTest();
         passwordValidator = null;
         passwordProperties = null;
         usernameValidator = null;
         usernameProperties = null;
     }
-
 
     private void useServiceAutowirer(final BiConsumer<Credential, TestCredentialService> consumer) {
         useService(CredentialService.class, new ImplementalAutowirer() {

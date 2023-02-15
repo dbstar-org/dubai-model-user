@@ -8,8 +8,6 @@ import io.github.dbstarll.dubai.user.entity.TestAuthTypeEntity;
 import io.github.dbstarll.dubai.user.entity.enums.AuthType;
 import io.github.dbstarll.dubai.user.entity.join.AuthTypable;
 import io.github.dbstarll.dubai.user.service.TestAuthTypeService;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -28,16 +26,6 @@ class AuthTypeAttachTest extends ServiceTestCase {
     @BeforeAll
     static void beforeAll() {
         globalCollectionFactory();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        cleanupGlobal();
-    }
-
-    @AfterEach
-    void tearDown() {
-        cleanupTest();
     }
 
     @Test

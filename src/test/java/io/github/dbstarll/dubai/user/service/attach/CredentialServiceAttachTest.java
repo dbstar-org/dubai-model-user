@@ -17,7 +17,6 @@ import io.github.dbstarll.dubai.user.utils.PasswordValidator;
 import io.github.dbstarll.dubai.user.utils.UsernameProperties;
 import io.github.dbstarll.dubai.user.utils.UsernameValidator;
 import org.bson.types.ObjectId;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,11 +47,6 @@ class CredentialServiceAttachTest extends ServiceTestCase {
         globalCollectionFactory();
     }
 
-    @AfterAll
-    static void afterAll() {
-        cleanupGlobal();
-    }
-
     @BeforeEach
     void setUp() {
         usernameProperties = new UsernameProperties();
@@ -63,7 +57,6 @@ class CredentialServiceAttachTest extends ServiceTestCase {
 
     @AfterEach
     void tearDown() {
-        cleanupTest();
         passwordValidator = null;
         passwordProperties = null;
         usernameValidator = null;
