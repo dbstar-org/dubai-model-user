@@ -3,6 +3,7 @@ package io.github.dbstarll.dubai.user.entity.ext;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,8 +35,8 @@ class PasswordHistoryTest {
     void testEquals() {
         final PasswordHistory history = new PasswordHistory("password", new Date());
         assertEquals(history, history);
-        assertNotEquals(history, null);
-        assertNotEquals(history, "null");
+        assertNotEquals(Collections.singletonList(history), Collections.singletonList(null));
+        assertNotEquals(Collections.singletonList(history), Collections.singletonList("null"));
         assertEquals(history, new PasswordHistory("password", history.getDate()));
     }
 
