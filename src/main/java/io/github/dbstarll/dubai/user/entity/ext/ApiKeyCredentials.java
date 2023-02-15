@@ -12,8 +12,6 @@ import java.util.Map;
 import static org.apache.commons.lang3.Validate.notBlank;
 
 public final class ApiKeyCredentials extends AbstractCredentials {
-    private static final long serialVersionUID = 828294776886147992L;
-
     public static final String FIELD_APP_ID = "appId";
     public static final String FIELD_KEY = "key";
     public static final String FIELD_SECRET = "secret";

@@ -4,12 +4,11 @@ import io.github.dbstarll.dubai.user.entity.Credential;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 
-abstract class AbstractCredentials implements CredentialDetails, Serializable {
+abstract class AbstractCredentials implements CredentialDetails {
     protected static final String DEFAULT_NOT_EMPTY_EX_MESSAGE = "%s is blank";
 
     private final Map<String, Object> map;

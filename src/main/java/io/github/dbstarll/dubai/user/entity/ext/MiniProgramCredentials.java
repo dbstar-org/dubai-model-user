@@ -12,8 +12,6 @@ import java.util.Map;
 import static org.apache.commons.lang3.Validate.notBlank;
 
 public final class MiniProgramCredentials extends AbstractCredentials {
-    private static final long serialVersionUID = 5632135628982288707L;
-
     public static final String FIELD_APP_ID = "appId";
     public static final String FIELD_OPEN_ID = "openId";
 

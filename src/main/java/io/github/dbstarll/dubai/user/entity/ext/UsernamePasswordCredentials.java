@@ -15,8 +15,6 @@ import static org.apache.commons.lang3.Validate.noNullElements;
 import static org.apache.commons.lang3.Validate.notBlank;
 
 public final class UsernamePasswordCredentials extends AbstractCredentials {
-    private static final long serialVersionUID = 5632135628982288707L;
-
     public static final String FIELD_USERNAME = "username";
     public static final String FIELD_PASSWORD = "password";
     public static final String FIELD_HISTORIES = "histories";
