@@ -7,11 +7,11 @@
     <artifactId>dubai-model</artifactId>
     <version>1.1.2</version>
   </parent>
-  <artifactId>dubai-module-user</artifactId>
+  <artifactId>dubai-model-user</artifactId>
   <version>1.0.3-SNAPSHOT</version>
 
-  <description>dubai user module</description>
-  <url>https://github.com/dbstar-org/dubai-module-user</url>
+  <description>dubai user model</description>
+  <url>https://github.com/dbstar-org/dubai-model-user</url>
 
   <scm>
     <connection>scm:git:${project.git.git.root}</connection>
@@ -21,7 +21,7 @@
   </scm>
 
   <properties>
-    <project.git.project>dubai-module-user</project.git.project>
+    <project.git.project>dubai-model-user</project.git.project>
     <version.dubai-model>${project.parent.version}</version.dubai-model>
   </properties>
 
