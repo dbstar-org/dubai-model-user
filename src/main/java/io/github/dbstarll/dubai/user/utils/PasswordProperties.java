@@ -19,17 +19,17 @@ public class PasswordProperties implements Serializable {
     public static final int DEFAULT_MIN_DAYS = 0;
 
     /**
-     * 禁止使用最近用过的密码个数，<=0表示不禁止.
+     * 禁止使用最近用过的密码个数，小于等于0表示不禁止.
      */
     private int remember = DEFAULT_REMEMBER;
 
     /**
-     * 最小密码长度，若<=0则不限制.
+     * 最小密码长度，若小于等于0则不限制.
      */
     private int minLen = DEFAULT_MIN_LEN;
 
     /**
-     * 最大密码长度，若<=0则不限制.
+     * 最大密码长度，若小于等于0则不限制.
      */
     private int maxLen = DEFAULT_MAX_LEN;
 
@@ -64,7 +64,7 @@ public class PasswordProperties implements Serializable {
     private int minDays = DEFAULT_MIN_DAYS;
 
     /**
-     * 禁止使用最近用过的密码个数，<=0表示不禁止.
+     * 禁止使用最近用过的密码个数，小于等于0表示不禁止.
      *
      * @return 禁止使用最近用过的密码个数
      */
@@ -73,7 +73,7 @@ public class PasswordProperties implements Serializable {
     }
 
     /**
-     * 设置禁止使用最近用过的密码个数，<=0表示不禁止.
+     * 设置禁止使用最近用过的密码个数，小于等于0表示不禁止.
      *
      * @param remember 禁止使用最近用过的密码个数
      */
@@ -82,7 +82,7 @@ public class PasswordProperties implements Serializable {
     }
 
     /**
-     * 获取最小密码长度，若<=0则不限制.
+     * 获取最小密码长度，若小于等于0则不限制.
      *
      * @return 最小密码长度
      */
@@ -91,7 +91,7 @@ public class PasswordProperties implements Serializable {
     }
 
     /**
-     * 设置最小密码长度，若<=0则不限制.
+     * 设置最小密码长度，若小于等于0则不限制.
      *
      * @param minLen 最小密码长度
      */
@@ -100,7 +100,7 @@ public class PasswordProperties implements Serializable {
     }
 
     /**
-     * 获取最大密码长度，若<=0则不限制.
+     * 获取最大密码长度，若小于等于0则不限制.
      *
      * @return 最大密码长度
      */
@@ -109,7 +109,7 @@ public class PasswordProperties implements Serializable {
     }
 
     /**
-     * 设置最大密码长度，若<=0则不限制.
+     * 设置最大密码长度，若小于等于0则不限制.
      *
      * @param maxLen 最大密码长度
      */

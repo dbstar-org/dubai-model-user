@@ -20,12 +20,12 @@ public class UsernameProperties implements Serializable {
     private String pattern = DEFAULT_PATTERN;
 
     /**
-     * 用户名最小字符长度，若<=0则不限制.
+     * 用户名最小字符长度，若小于等于0则不限制.
      */
     private int minLen = DEFAULT_MIN_LEN;
 
     /**
-     * 用户名最大字符长度，若<=0则不限制.
+     * 用户名最大字符长度，若小于等于0则不限制.
      */
     private int maxLen = DEFAULT_MAX_LEN;
 
@@ -57,7 +57,7 @@ public class UsernameProperties implements Serializable {
     }
 
     /**
-     * 设置用户名最小长度限制，若<=0则不限制.
+     * 设置用户名最小长度限制，若小于等于0则不限制.
      *
      * @param minLen 用户名最小长度限制
      */
@@ -75,7 +75,7 @@ public class UsernameProperties implements Serializable {
     }
 
     /**
-     * 设置用户名最大长度限制，若<=0则不限制.
+     * 设置用户名最大长度限制，若小于等于0则不限制.
      *
      * @param maxLen 用户名最大长度限制
      */
