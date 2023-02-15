@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -127,7 +128,6 @@ class ApiKeyCredentialsTest {
         assertNotEquals(c1, c3);
 
         assertEquals(d1, d1);
-        assertNotEquals(Collections.singletonList(d1), Collections.singletonList(null));
-        assertNotEquals(Collections.singletonList(d1), Collections.singletonList("null"));
+        assertTrue(Stream.of(null, "null").noneMatch(d1::equals));
     }
 }
