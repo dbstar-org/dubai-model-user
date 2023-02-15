@@ -1,5 +1,8 @@
 package io.github.dbstarll.dubai.user.entity.enums;
 
-public enum SourceType {
+/**
+ * 认证类型.
+ */
+public enum AuthType {
     UsernamePassword, SMS, MiniProgram, ApiKey, X509
 }

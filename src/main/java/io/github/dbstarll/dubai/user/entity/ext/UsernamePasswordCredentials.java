@@ -2,115 +2,111 @@ package io.github.dbstarll.dubai.user.entity.ext;
 
 import com.mongodb.client.model.Filters;
 import io.github.dbstarll.dubai.model.service.validate.Validate;
-import io.github.dbstarll.dubai.user.entity.enums.SourceType;
+import io.github.dbstarll.dubai.user.entity.enums.AuthType;
+import io.github.dbstarll.dubai.user.entity.join.AuthTypable;
 import org.apache.commons.lang3.StringUtils;
-import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.Validate.noNullElements;
 import static org.apache.commons.lang3.Validate.notBlank;
 
 public final class UsernamePasswordCredentials extends AbstractCredentials {
-  private static final long serialVersionUID = 5632135628982288707L;
+    public static final String FIELD_USERNAME = "username";
+    public static final String FIELD_PASSWORD = "password";
+    public static final String FIELD_HISTORIES = "histories";
+    public static final int MAX_HISTORIES = 5;
 
-  public static final String FIELD_USERNAME = "username";
-  public static final String FIELD_PASSWORD = "password";
-  public static final String FIELD_DATE = "date";
-  public static final String FIELD_HISTORIES = "histories";
-  public static final int MAX_HISTORIES = 5;
-
-  UsernamePasswordCredentials(String username, String password, List<PasswordHistory> histories) {
-    setUsername(username);
-    setPassword(password);
-    if (histories != null) {
-      put(FIELD_HISTORIES, noNullElements(histories, "histories contains null element at index: %d"));
-    }
-  }
-
-  UsernamePasswordCredentials(Map<String, Object> map) {
-    super(map);
-  }
-
-  public String getUsername() {
-    return (String) get(FIELD_USERNAME);
-  }
-
-  public void setUsername(String username) {
-    put(FIELD_USERNAME, notBlank(username, FIELD_USERNAME + " is blank"));
-  }
-
-  public String getPassword() {
-    return (String) get(FIELD_PASSWORD);
-  }
-
-  public void setPassword(String password) {
-    put(FIELD_PASSWORD, notBlank(password, FIELD_PASSWORD + " is blank"));
-  }
-
-  /**
-   * 获得密码修改历史.
-   *
-   * @return list of PasswordHistory
-   */
-  public List<PasswordHistory> getHistories() {
-    if (containsKey(FIELD_HISTORIES)) {
-      final List<PasswordHistory> histories = new LinkedList<>();
-      for (Object history : (List<?>) get(FIELD_HISTORIES)) {
-        histories.add(parsePasswordHistory(history));
-      }
-      return histories;
-    }
-    return null;
-  }
-
-  @Override
-  public void validate(Map<String, Object> original, Validate validate) {
-    if (StringUtils.isBlank(getUsername())) {
-      validate.addFieldError(FIELD_CREDENTIALS, "用户名未设置");
-    }
-    if (StringUtils.isBlank(getPassword())) {
-      validate.addFieldError(FIELD_CREDENTIALS, "密码未设置");
+    UsernamePasswordCredentials(final String username, final String password) {
+        setUsername(username);
+        setPassword(password);
     }
 
-    if (!validate.hasErrors()) {
-      @SuppressWarnings("unchecked") List<Object> histories = (List<Object>) (original != null ? original : this)
-              .get(FIELD_HISTORIES);
-      if (histories == null) {
-        histories = new LinkedList<>();
-      }
-      if (histories.isEmpty() || !getPassword().equals(parsePasswordHistory(histories.get(0)).getPassword())) {
-        histories.add(0, new PasswordHistory(getPassword(), new Date()));
-      }
-      while (histories.size() > MAX_HISTORIES) {
-        histories.remove(histories.size() - 1);
-      }
-      put(FIELD_HISTORIES, histories);
+    UsernamePasswordCredentials(final Map<String, Object> map) {
+        super(map);
     }
-  }
 
-  private PasswordHistory parsePasswordHistory(Object history) {
-    if (PasswordHistory.class.isInstance(history)) {
-      return (PasswordHistory) history;
-    } else if (Document.class.isInstance(history)) {
-      final Document doc = (Document) history;
-      return new PasswordHistory(doc.getString(FIELD_PASSWORD), doc.getDate(FIELD_DATE));
-    } else {
-      throw new UnsupportedOperationException(history.toString());
+    /**
+     * 获得用户名.
+     *
+     * @return 用户名
+     */
+    public String getUsername() {
+        return get(FIELD_USERNAME);
     }
-  }
 
-  @Override
-  public Bson distinctFilter() {
-    return distinctFilter(getUsername());
-  }
+    /**
+     * 设置新用户名.
+     *
+     * @param username 新用户名
+     */
+    public void setUsername(final String username) {
+        put(FIELD_USERNAME, notBlank(username, DEFAULT_NOT_EMPTY_EX_MESSAGE, FIELD_USERNAME));
+    }
 
-  public static Bson distinctFilter(String username) {
-    return Filters.and(Filters.eq("source", SourceType.UsernamePassword),
-            Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_USERNAME, username));
-  }
+    /**
+     * 获得密码.
+     *
+     * @return 密码
+     */
+    public String getPassword() {
+        return get(FIELD_PASSWORD);
+    }
+
+    /**
+     * 设置新密码.
+     *
+     * @param password 新密码
+     */
+    public void setPassword(final String password) {
+        put(FIELD_PASSWORD, notBlank(password, DEFAULT_NOT_EMPTY_EX_MESSAGE, FIELD_PASSWORD));
+    }
+
+    /**
+     * 获得密码修改历史.
+     *
+     * @return list of PasswordHistory
+     */
+    public List<PasswordHistory> getHistories() {
+        final List<Object> list = get(FIELD_HISTORIES);
+        return list == null ? null : list.stream().map(PasswordHistory::parse).collect(Collectors.toList());
+    }
+
+    /**
+     * 设置密码修改历史.
+     *
+     * @param histories 密码修改历史
+     */
+    public void setHistories(final List<PasswordHistory> histories) {
+        put(FIELD_HISTORIES, noNullElements(histories, FIELD_HISTORIES + " contains null element at index: %d"));
+    }
+
+    @Override
+    public void validate(final CredentialDetails original, final Validate validate) {
+        if (StringUtils.isBlank(getUsername())) {
+            validate.addFieldError(FIELD_CREDENTIALS, "用户名未设置");
+        }
+        if (StringUtils.isBlank(getPassword())) {
+            validate.addFieldError(FIELD_CREDENTIALS, "密码未设置");
+        }
+    }
+
+    @Override
+    public Bson distinctFilter() {
+        return distinctFilter(getUsername());
+    }
+
+    /**
+     * 唯一filter.
+     *
+     * @param username 用户名
+     * @return 唯一filter
+     */
+    public static Bson distinctFilter(final String username) {
+        return Filters.and(Filters.eq(AuthTypable.FIELD_NAME_AUTH_TYPE, AuthType.UsernamePassword),
+                Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_USERNAME, username));
+    }
 }

@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>io.github.dbstarll.dubai</groupId>
-    <artifactId>dubai-module</artifactId>
-    <version>1.1.0</version>
+    <artifactId>dubai-model</artifactId>
+    <version>1.1.2</version>
   </parent>
   <artifactId>dubai-module-user</artifactId>
   <version>1.0.3-SNAPSHOT</version>
@@ -21,9 +22,54 @@
 
   <properties>
     <project.git.project>dubai-module-user</project.git.project>
+    <version.dubai-model>${project.parent.version}</version.dubai-model>
   </properties>
 
+  <dependencies>
+    <dependency>
+      <groupId>io.github.dbstarll.dubai</groupId>
+      <artifactId>dubai-model-service</artifactId>
+      <version>${version.dubai-model}</version>
+    </dependency>
+    <!-- Spring -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <version>${version.spring-boot}</version>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
   <profiles>
+    <profile>
+      <id>java-test</id>
+      <activation>
+        <file>
+          <exists>src/test/java</exists>
+        </file>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>io.github.dbstarll.dubai</groupId>
+          <artifactId>dubai-model-collection</artifactId>
+          <version>${version.dubai-model}</version>
+          <classifier>tests</classifier>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>io.github.dbstarll.dubai</groupId>
+          <artifactId>dubai-model-service</artifactId>
+          <version>${version.dubai-model}</version>
+          <classifier>tests</classifier>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
     <profile>
       <id>site-local</id>
       <distributionManagement>

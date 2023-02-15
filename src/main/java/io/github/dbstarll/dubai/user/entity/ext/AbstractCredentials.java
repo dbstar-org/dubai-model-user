@@ -1,117 +1,60 @@
 package io.github.dbstarll.dubai.user.entity.ext;
 
-import java.io.Serializable;
-import java.util.Collection;
+import io.github.dbstarll.dubai.user.entity.Credential;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.StringJoiner;
 
-abstract class AbstractCredentials implements CredentialDetails, Cloneable, Serializable {
-  private static final long serialVersionUID = 7011651370922942849L;
+abstract class AbstractCredentials implements CredentialDetails {
+    protected static final String DEFAULT_NOT_EMPTY_EX_MESSAGE = "%s is blank";
 
-  private final Map<String, Object> map;
+    private final Map<String, Object> map;
 
-  AbstractCredentials() {
-    this(null);
-  }
-
-  AbstractCredentials(Map<String, Object> map) {
-    this.map = map == null ? new HashMap<String, Object>() : new HashMap<>(map);
-  }
-
-  @Override
-  public final int size() {
-    return map.size();
-  }
-
-  @Override
-  public final boolean isEmpty() {
-    return map.isEmpty();
-  }
-
-  @Override
-  public final boolean containsKey(Object key) {
-    return map.containsKey(key);
-  }
-
-  @Override
-  public final boolean containsValue(Object value) {
-    return map.containsValue(value);
-  }
-
-  @Override
-  public final Object get(Object key) {
-    return map.get(key);
-  }
-
-  @Override
-  public final Object put(String key, Object value) {
-    return map.put(key, value);
-  }
-
-  @Override
-  public final Object remove(Object key) {
-    return map.remove(key);
-  }
-
-  @Override
-  public final void putAll(Map<? extends String, ? extends Object> m) {
-    map.putAll(m);
-  }
-
-  @Override
-  public final void clear() {
-    map.clear();
-  }
-
-  @Override
-  public final Set<String> keySet() {
-    return map.keySet();
-  }
-
-  @Override
-  public final Collection<Object> values() {
-    return map.values();
-  }
-
-  @Override
-  public final Set<Entry<String, Object>> entrySet() {
-    return map.entrySet();
-  }
-
-  @Override
-  public final int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + map.hashCode();
-    return result;
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
+    protected AbstractCredentials() {
+        this(null);
     }
-    if (obj == null) {
-      return false;
-    }
-    if (AbstractCredentials.class.isInstance(obj)) {
-      return map.equals(((AbstractCredentials) obj).map);
-    } else if (Map.class.isInstance(obj)) {
-      return map.equals(obj);
-    } else {
-      return false;
-    }
-  }
 
-  @Override
-  public final AbstractCredentials clone() throws CloneNotSupportedException {
-    final AbstractCredentials details = (AbstractCredentials) super.clone();
-    return details;
-  }
+    protected AbstractCredentials(final Map<String, Object> map) {
+        this.map = map == null ? new HashMap<>() : map;
+    }
 
-  @Override
-  public final String toString() {
-    return getClass().getName() + ": " + map;
-  }
+    @SuppressWarnings("unchecked")
+    protected final <C> C get(final String key) {
+        return (C) map.get(key);
+    }
+
+    protected final void put(final String key, final Object value) {
+        map.put(key, value);
+    }
+
+    @Override
+    public final boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        } else if (o == null || o.getClass() != getClass()) {
+            return false;
+        }
+        final AbstractCredentials that = (AbstractCredentials) o;
+        return new EqualsBuilder().append(map, that.map).isEquals();
+    }
+
+    @Override
+    public final int hashCode() {
+        return new HashCodeBuilder().append(map).toHashCode();
+    }
+
+    @Override
+    public final String toString() {
+        return new StringJoiner(", ", getClass().getSimpleName() + "[", "]")
+                .add("map=" + map.size())
+                .toString();
+    }
+
+    final Credential apply(final Credential credential) {
+        credential.setCredentials(this.map);
+        return credential;
+    }
 }

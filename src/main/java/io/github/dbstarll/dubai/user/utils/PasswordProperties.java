@@ -1,149 +1,227 @@
 package io.github.dbstarll.dubai.user.utils;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import java.io.Serializable;
 
+@ConfigurationProperties(prefix = "dubai.model.user.validator.password")
 public class PasswordProperties implements Serializable {
     private static final long serialVersionUID = -4216256648207389964L;
 
-    /**
-     * 禁止使用最近用过的密码个数，0表示不禁止.
-     */
-    private int remember = 3;
+    public static final int DEFAULT_REMEMBER = 3;
+    public static final int DEFAULT_MIN_LEN = 8;
+    public static final int DEFAULT_MAX_LEN = 16;
+    public static final int DEFAULT_UPPER = 0;
+    public static final int DEFAULT_LOWER = 0;
+    public static final int DEFAULT_DIGIT = 0;
+    public static final int DEFAULT_SPECIAL = 0;
+    public static final int DEFAULT_COMPLEXITY = 3;
+    public static final int DEFAULT_MIN_DAYS = 0;
 
     /**
-     * 最小密码长度.
+     * 禁止使用最近用过的密码个数，<=0表示不禁止.
      */
-    private int minLen = 8;
+    private int remember = DEFAULT_REMEMBER;
 
     /**
-     * 最大密码长度.
+     * 最小密码长度，若<=0则不限制.
      */
-    private int maxLen = 16;
+    private int minLen = DEFAULT_MIN_LEN;
+
+    /**
+     * 最大密码长度，若<=0则不限制.
+     */
+    private int maxLen = DEFAULT_MAX_LEN;
 
     /**
      * 必须至少包含大写字母的数量，-1表示不允许使用.
      */
-    private int upper = 0;
+    private int upper = DEFAULT_UPPER;
 
     /**
      * 必须至少包含小写字母的数量，-1表示不允许使用.
      */
-    private int lower = 0;
+    private int lower = DEFAULT_LOWER;
 
     /**
      * 必须至少包含数字的数量，-1表示不允许使用.
      */
-    private int digit = 0;
+    private int digit = DEFAULT_DIGIT;
 
     /**
      * 必须至少包含特殊字符的数量，-1表示不允许使用.
      */
-    private int special = 0;
+    private int special = DEFAULT_SPECIAL;
 
     /**
-     * 设置密码复杂度，必须包含大写字母/小写字母/数字/特殊字符这4中类型中的几种.
+     * 密码复杂度，必须包含大写字母/小写字母/数字/特殊字符这4中类型中的几种.
      */
-    private int complexity = 3;
+    private int complexity = DEFAULT_COMPLEXITY;
 
     /**
-     * 设置最短多少天可以再次修改密码.
+     * 最短多少天可以再次修改密码.
      */
-    private int minDays = 0;
-    /**
-     * 设置最长多少天必须修改密码.
-     */
-    private int maxDays = 90;
+    private int minDays = DEFAULT_MIN_DAYS;
 
     /**
-     * 设置提前多少天提醒用户密码快到期了.
+     * 禁止使用最近用过的密码个数，<=0表示不禁止.
+     *
+     * @return 禁止使用最近用过的密码个数
      */
-    private int warnDays = 7;
-
     public int getRemember() {
         return remember;
     }
 
-    public void setRemember(int remember) {
+    /**
+     * 设置禁止使用最近用过的密码个数，<=0表示不禁止.
+     *
+     * @param remember 禁止使用最近用过的密码个数
+     */
+    public void setRemember(final int remember) {
         this.remember = remember;
     }
 
+    /**
+     * 获取最小密码长度，若<=0则不限制.
+     *
+     * @return 最小密码长度
+     */
     public int getMinLen() {
         return minLen;
     }
 
-    public void setMinLen(int minLen) {
+    /**
+     * 设置最小密码长度，若<=0则不限制.
+     *
+     * @param minLen 最小密码长度
+     */
+    public void setMinLen(final int minLen) {
         this.minLen = minLen;
     }
 
+    /**
+     * 获取最大密码长度，若<=0则不限制.
+     *
+     * @return 最大密码长度
+     */
     public int getMaxLen() {
         return maxLen;
     }
 
-    public void setMaxLen(int maxLen) {
+    /**
+     * 设置最大密码长度，若<=0则不限制.
+     *
+     * @param maxLen 最大密码长度
+     */
+    public void setMaxLen(final int maxLen) {
         this.maxLen = maxLen;
     }
 
+    /**
+     * 获取必须至少包含大写字母的数量，-1表示不允许使用.
+     *
+     * @return 必须至少包含大写字母的数量
+     */
     public int getUpper() {
         return upper;
     }
 
-    public void setUpper(int upper) {
+    /**
+     * 设置必须至少包含大写字母的数量，-1表示不允许使用.
+     *
+     * @param upper 必须至少包含大写字母的数量
+     */
+    public void setUpper(final int upper) {
         this.upper = upper;
     }
 
+    /**
+     * 获取必须至少包含小写字母的数量，-1表示不允许使用.
+     *
+     * @return 必须至少包含小写字母的数量
+     */
     public int getLower() {
         return lower;
     }
 
-    public void setLower(int lower) {
+    /**
+     * 设置必须至少包含小写字母的数量，-1表示不允许使用.
+     *
+     * @param lower 必须至少包含小写字母的数量
+     */
+    public void setLower(final int lower) {
         this.lower = lower;
     }
 
+    /**
+     * 获取必须至少包含数字的数量，-1表示不允许使用.
+     *
+     * @return 必须至少包含数字的数量
+     */
     public int getDigit() {
         return digit;
     }
 
-    public void setDigit(int digit) {
+    /**
+     * 设置必须至少包含数字的数量，-1表示不允许使用.
+     *
+     * @param digit 必须至少包含数字的数量
+     */
+    public void setDigit(final int digit) {
         this.digit = digit;
     }
 
+    /**
+     * 获取必须至少包含特殊字符的数量，-1表示不允许使用.
+     *
+     * @return 必须至少包含特殊字符的数量
+     */
     public int getSpecial() {
         return special;
     }
 
-    public void setSpecial(int special) {
+    /**
+     * 设置必须至少包含特殊字符的数量，-1表示不允许使用.
+     *
+     * @param special 必须至少包含特殊字符的数量
+     */
+    public void setSpecial(final int special) {
         this.special = special;
     }
 
+    /**
+     * 获取密码复杂度，必须包含大写字母/小写字母/数字/特殊字符这4中类型中的几种.
+     *
+     * @return 密码复杂度
+     */
     public int getComplexity() {
         return complexity;
     }
 
-    public void setComplexity(int complexity) {
+    /**
+     * 设置密码复杂度，必须包含大写字母/小写字母/数字/特殊字符这4中类型中的几种.
+     *
+     * @param complexity 密码复杂度
+     */
+    public void setComplexity(final int complexity) {
         this.complexity = complexity;
     }
 
+    /**
+     * 获取最短多少天可以再次修改密码.
+     *
+     * @return 最短多少天可以再次修改密码
+     */
     public int getMinDays() {
         return minDays;
     }
 
-    public void setMinDays(int minDays) {
+    /**
+     * 设置最短多少天可以再次修改密码.
+     *
+     * @param minDays 天数
+     */
+    public void setMinDays(final int minDays) {
         this.minDays = minDays;
-    }
-
-    public int getMaxDays() {
-        return maxDays;
-    }
-
-    public void setMaxDays(int maxDays) {
-        this.maxDays = maxDays;
-    }
-
-    public int getWarnDays() {
-        return warnDays;
-    }
-
-    public void setWarnDays(int warnDays) {
-        this.warnDays = warnDays;
     }
 }
