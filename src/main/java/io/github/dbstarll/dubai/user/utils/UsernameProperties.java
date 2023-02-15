@@ -1,9 +1,12 @@
 package io.github.dbstarll.dubai.user.utils;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import java.io.Serializable;
 
 import static org.apache.commons.lang3.Validate.notBlank;
 
+@ConfigurationProperties(prefix = "dubai.model.user.validator.username")
 public class UsernameProperties implements Serializable {
     private static final long serialVersionUID = 1723263105832030610L;
 

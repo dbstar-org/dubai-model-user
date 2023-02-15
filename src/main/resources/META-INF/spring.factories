@@ -2,3 +2,5 @@ io.github.dbstarll.dubai.model.entity.Entity=\
 io.github.dbstarll.dubai.user.entity.UserEntities
 io.github.dbstarll.dubai.model.service.Service=\
 io.github.dbstarll.dubai.user.service.UserServices
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.github.dbstarll.dubai.user.spring.autoconfigure.ValidatorAutoConfiguration
