@@ -14,13 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ApiKeyCredentialsTest {
     @Test
     void get() {
         final Credential credential = Credentials.apiKey("appId", "key", "secret");
-        assertEquals(AuthType.ApiKey, credential.getSource());
+        assertSame(AuthType.API_KEY, credential.getSource());
         final ApiKeyCredentials credentials = assertInstanceOf(ApiKeyCredentials.class, Credentials.credentials(credential));
         assertEquals("appId", credentials.getAppId());
         assertEquals("key", credentials.getKey());

@@ -99,7 +99,7 @@ public final class ApiKeyCredentials extends AbstractCredentials {
      * @return 唯一filter
      */
     public static Bson distinctFilter(final String appId, final String key) {
-        return Filters.and(Filters.eq(AuthTypable.FIELD_NAME_AUTH_TYPE, AuthType.ApiKey),
+        return Filters.and(Filters.eq(AuthTypable.FIELD_NAME_AUTH_TYPE, AuthType.API_KEY),
                 Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_APP_ID, appId),
                 Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_KEY, key));
     }

@@ -76,7 +76,7 @@ public final class MiniProgramCredentials extends AbstractCredentials {
      * @return 唯一filter
      */
     public static Bson distinctFilter(final String appId, final String openId) {
-        return Filters.and(Filters.eq(AuthTypable.FIELD_NAME_AUTH_TYPE, AuthType.MiniProgram),
+        return Filters.and(Filters.eq(AuthTypable.FIELD_NAME_AUTH_TYPE, AuthType.MINI_PROGRAM),
                 Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_APP_ID, appId),
                 Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_OPEN_ID, openId));
     }

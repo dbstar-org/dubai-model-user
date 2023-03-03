@@ -31,39 +31,39 @@ class AuthTypeAttachTest extends ServiceTestCase {
     @Test
     void filterByAuthType() {
         useService(serviceClass, s -> assertEquals("Filter{fieldName='source', value=MiniProgram}",
-                s.filterByAuthType(AuthType.MiniProgram).toString()));
+                s.filterByAuthType(AuthType.MINI_PROGRAM).toString()));
     }
 
     @Test
     void countByAuthType() {
         useService(serviceClass, s -> {
-            assertEquals(0, s.countByAuthType(AuthType.MiniProgram));
+            assertEquals(0, s.countByAuthType(AuthType.MINI_PROGRAM));
             final TestAuthTypeEntity entity = EntityFactory.newInstance(entityClass);
-            entity.setSource(AuthType.MiniProgram);
+            entity.setSource(AuthType.MINI_PROGRAM);
             assertSame(entity, s.save(entity, null));
-            assertEquals(1, s.countByAuthType(AuthType.MiniProgram));
+            assertEquals(1, s.countByAuthType(AuthType.MINI_PROGRAM));
         });
     }
 
     @Test
     void findByAuthType() {
         useService(serviceClass, s -> {
-            assertNull(s.findByAuthType(AuthType.MiniProgram).first());
+            assertNull(s.findByAuthType(AuthType.MINI_PROGRAM).first());
             final TestAuthTypeEntity entity = EntityFactory.newInstance(entityClass);
-            entity.setSource(AuthType.MiniProgram);
+            entity.setSource(AuthType.MINI_PROGRAM);
             assertSame(entity, s.save(entity, null));
-            assertEquals(entity, s.findByAuthType(AuthType.MiniProgram).first());
+            assertEquals(entity, s.findByAuthType(AuthType.MINI_PROGRAM).first());
         });
     }
 
     @Test
     void deleteByAuthType() {
         useService(serviceClass, s -> {
-            assertEquals(0, s.deleteByAuthType(AuthType.MiniProgram).getDeletedCount());
+            assertEquals(0, s.deleteByAuthType(AuthType.MINI_PROGRAM).getDeletedCount());
             final TestAuthTypeEntity entity = EntityFactory.newInstance(entityClass);
-            entity.setSource(AuthType.MiniProgram);
+            entity.setSource(AuthType.MINI_PROGRAM);
             assertSame(entity, s.save(entity, null));
-            assertEquals(1, s.deleteByAuthType(AuthType.MiniProgram).getDeletedCount());
+            assertEquals(1, s.deleteByAuthType(AuthType.MINI_PROGRAM).getDeletedCount());
             assertNull(s.findById(entity.getId()));
         });
     }
@@ -85,14 +85,14 @@ class AuthTypeAttachTest extends ServiceTestCase {
     void authTypeValidationChange() {
         useService(serviceClass, s -> {
             final TestAuthTypeEntity entity = EntityFactory.newInstance(entityClass);
-            entity.setSource(AuthType.MiniProgram);
+            entity.setSource(AuthType.MINI_PROGRAM);
             assertSame(entity, s.save(entity, null));
 
             final Validate validate = new DefaultValidate();
             assertNull(s.save(entity, validate));
             assertFalse(validate.hasErrors());
 
-            entity.setSource(AuthType.UsernamePassword);
+            entity.setSource(AuthType.USERNAME_PASSWORD);
             assertNull(s.save(entity, validate));
             assertTrue(validate.hasErrors());
             assertTrue(validate.hasFieldErrors());

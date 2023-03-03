@@ -12,13 +12,14 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MiniProgramCredentialsTest {
     @Test
     void get() {
         final Credential credential = Credentials.miniProgram("appId", "openId");
-        assertEquals(AuthType.MiniProgram, credential.getSource());
+        assertSame(AuthType.MINI_PROGRAM, credential.getSource());
         final MiniProgramCredentials credentials = assertInstanceOf(MiniProgramCredentials.class, Credentials.credentials(credential));
         assertEquals("appId", credentials.getAppId());
         assertEquals("openId", credentials.getOpenId());

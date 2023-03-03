@@ -3,9 +3,9 @@ package io.github.dbstarll.dubai.user.entity.ext;
 import io.github.dbstarll.dubai.model.entity.EntityFactory;
 import io.github.dbstarll.dubai.user.entity.Credential;
 
-import static io.github.dbstarll.dubai.user.entity.enums.AuthType.ApiKey;
-import static io.github.dbstarll.dubai.user.entity.enums.AuthType.MiniProgram;
-import static io.github.dbstarll.dubai.user.entity.enums.AuthType.UsernamePassword;
+import static io.github.dbstarll.dubai.user.entity.enums.AuthType.API_KEY;
+import static io.github.dbstarll.dubai.user.entity.enums.AuthType.MINI_PROGRAM;
+import static io.github.dbstarll.dubai.user.entity.enums.AuthType.USERNAME_PASSWORD;
 
 public final class Credentials {
     private Credentials() {
@@ -24,11 +24,11 @@ public final class Credentials {
             return null;
         } else {
             switch (credential.getSource()) {
-                case MiniProgram:
+                case MINI_PROGRAM:
                     return new MiniProgramCredentials(credential.getCredentials());
-                case UsernamePassword:
+                case USERNAME_PASSWORD:
                     return new UsernamePasswordCredentials(credential.getCredentials());
-                case ApiKey:
+                case API_KEY:
                     return new ApiKeyCredentials(credential.getCredentials());
                 default:
                     throw new UnsupportedAuthTypeException(credential.getSource());
@@ -45,7 +45,7 @@ public final class Credentials {
      */
     public static Credential miniProgram(final String appId, final String openId) {
         final Credential credential = EntityFactory.newInstance(Credential.class);
-        credential.setSource(MiniProgram);
+        credential.setSource(MINI_PROGRAM);
         return new MiniProgramCredentials(appId, openId).apply(credential);
     }
 
@@ -58,7 +58,7 @@ public final class Credentials {
      */
     public static Credential usernamePassword(final String username, final String password) {
         final Credential credential = EntityFactory.newInstance(Credential.class);
-        credential.setSource(UsernamePassword);
+        credential.setSource(USERNAME_PASSWORD);
         return new UsernamePasswordCredentials(username, password).apply(credential);
     }
 
@@ -72,7 +72,7 @@ public final class Credentials {
      */
     public static Credential apiKey(final String appId, final String key, final String secret) {
         final Credential credential = EntityFactory.newInstance(Credential.class);
-        credential.setSource(ApiKey);
+        credential.setSource(API_KEY);
         return new ApiKeyCredentials(appId, key, secret).apply(credential);
     }
 }

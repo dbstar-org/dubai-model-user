@@ -12,13 +12,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UsernamePasswordCredentialsTest {
     @Test
     void get() {
         final Credential credential = Credentials.usernamePassword("username", "password");
-        assertEquals(AuthType.UsernamePassword, credential.getSource());
+        assertSame(AuthType.USERNAME_PASSWORD, credential.getSource());
         final UsernamePasswordCredentials credentials = assertInstanceOf(UsernamePasswordCredentials.class, Credentials.credentials(credential));
         assertEquals("username", credentials.getUsername());
         assertEquals("password", credentials.getPassword());
