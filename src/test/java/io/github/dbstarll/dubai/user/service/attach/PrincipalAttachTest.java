@@ -89,7 +89,7 @@ class PrincipalAttachTest extends ServiceTestCase {
             assertNull(service.findWithPrincipal(principalService, null).first());
 
             final TestAuthTypeEntity principal = EntityFactory.newInstance(TestAuthTypeEntity.class);
-            principal.setSource(AuthType.MiniProgram);
+            principal.setSource(AuthType.MINI_PROGRAM);
             assertNotNull(principalService.save(principal, null));
 
             final TestPrincipalEntity entity = EntityFactory.newInstance(entityClass);

@@ -106,7 +106,7 @@ public final class UsernamePasswordCredentials extends AbstractCredentials {
      * @return 唯一filter
      */
     public static Bson distinctFilter(final String username) {
-        return Filters.and(Filters.eq(AuthTypable.FIELD_NAME_AUTH_TYPE, AuthType.UsernamePassword),
+        return Filters.and(Filters.eq(AuthTypable.FIELD_NAME_AUTH_TYPE, AuthType.USERNAME_PASSWORD),
                 Filters.eq(FIELD_CREDENTIALS + '.' + FIELD_USERNAME, username));
     }
 }

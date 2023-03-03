@@ -15,7 +15,7 @@ class CredentialsTest {
     @Test
     void usernamePassword() {
         final Credential credential = Credentials.usernamePassword("username", "password");
-        assertSame(AuthType.UsernamePassword, credential.getSource());
+        assertSame(AuthType.USERNAME_PASSWORD, credential.getSource());
         final UsernamePasswordCredentials credentials = assertInstanceOf(UsernamePasswordCredentials.class,
                 Credentials.credentials(credential));
         assertEquals("username", credentials.getUsername());
@@ -26,7 +26,7 @@ class CredentialsTest {
     @Test
     void miniProgram() {
         final Credential credential = Credentials.miniProgram("appId", "openId");
-        assertSame(AuthType.MiniProgram, credential.getSource());
+        assertSame(AuthType.MINI_PROGRAM, credential.getSource());
         final MiniProgramCredentials credentials = assertInstanceOf(MiniProgramCredentials.class,
                 Credentials.credentials(credential));
         assertEquals("appId", credentials.getAppId());
@@ -36,7 +36,7 @@ class CredentialsTest {
     @Test
     void apiKey() {
         final Credential credential = Credentials.apiKey("appId", "key", "secret");
-        assertSame(AuthType.ApiKey, credential.getSource());
+        assertSame(AuthType.API_KEY, credential.getSource());
         final ApiKeyCredentials credentials = assertInstanceOf(ApiKeyCredentials.class,
                 Credentials.credentials(credential));
         assertEquals("appId", credentials.getAppId());
