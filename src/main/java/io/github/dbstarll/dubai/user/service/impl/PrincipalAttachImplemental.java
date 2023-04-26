@@ -61,7 +61,7 @@ public final class PrincipalAttachImplemental<E extends Entity & PrincipalBase, 
                 .match(aggregateMatchFilter(filter))
                 .join(principalService, PrincipalBase.FIELD_NAME_PRINCIPAL_ID)
                 .build()
-                .aggregateOne(DEFAULT_CONTEXT)
+                .joinOne(DEFAULT_CONTEXT)
                 .map(e -> EntryWrapper.wrap(e.getKey(), (E1) e.getValue().get(principalService.getEntityClass())));
     }
 

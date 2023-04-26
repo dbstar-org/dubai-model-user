@@ -78,7 +78,7 @@ public final class CredentialAttachImplemental<E extends Entity & CredentialBase
                 .match(aggregateMatchFilter(filter))
                 .join(credentialService, CredentialBase.FIELD_NAME_CREDENTIAL_ID)
                 .build()
-                .aggregateOne(DEFAULT_CONTEXT)
+                .joinOne(DEFAULT_CONTEXT)
                 .map(e -> EntryWrapper.wrap(e.getKey(), (Credential) e.getValue().get(Credential.class)));
     }
 
